@@ -1,0 +1,10 @@
+com\mycompany\tinderitsonbd\entities\Hobbie.class
+com\mycompany\tinderitsonbd\entities\EstudianteHobbie.class
+com\mycompany\tinderitsonbd\entities\Estudiante.class
+com\mycompany\tinderitsonbd\entities\Telefono.class
+com\mycompany\tinderitsonbd\entities\Mensaje.class
+com\mycompany\tinderitsonbd\entities\Match.class
+com\mycompany\tinderitsonbd\entities\Carrera.class
+com\mycompany\tinderitsonbd\entities\Correo.class
+com\mycompany\tinderitsonbd\entities\Like.class
+com\mycompany\tinderitsonbd\TinderItsonBD.class
