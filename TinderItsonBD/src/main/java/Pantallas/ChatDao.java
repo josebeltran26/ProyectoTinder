@@ -21,12 +21,12 @@ import java.util.Comparator;
  */
 public class ChatDao extends JFrame {
 
-    private final MensajeService mensajeService = new MensajeService();
+    private final IMensajeService mensajeService = new MensajeService();
     private ClienteChat clienteChat;
 
     private final Match match;
     private final Estudiante estudianteLogueado;
-    private Estudiante otroEstudiante = null;
+    private final Estudiante otroEstudiante;
     private final DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
 
     private JPanel panelMensajes;
@@ -40,6 +40,7 @@ public class ChatDao extends JFrame {
 
         if (this.estudianteLogueado == null) {
             JOptionPane.showMessageDialog(this, "Sesión no iniciada.", "Error", JOptionPane.ERROR_MESSAGE);
+            this.otroEstudiante = null;
             return;
         }
 
@@ -91,6 +92,10 @@ public class ChatDao extends JFrame {
     }
 
     private void cargarHistorial() {
+        if (estudianteLogueado == null || otroEstudiante == null) {
+            return;
+        }
+
         try {
             List<Mensaje> mensajes = mensajeService.buscarMensajesEntreEstudiantes(estudianteLogueado, otroEstudiante);
             mensajes.sort(Comparator.comparing(Mensaje::getFechaHora));
@@ -104,7 +109,7 @@ public class ChatDao extends JFrame {
 
             SwingUtilities.invokeLater(() -> {
                 JScrollBar sb = scrollPane.getVerticalScrollBar();
-                sb.setValue(sb.getMaximum()); // Scrollear al final
+                sb.setValue(sb.getMaximum());
             });
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Error al cargar historial: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
