@@ -47,6 +47,7 @@ private void mostrarPerfil() {
         btnSkip = new javax.swing.JButton();
         Hobbies = new javax.swing.JLabel();
         lblFoto = new javax.swing.JLabel();
+        btnLike1 = new javax.swing.JButton();
 
         jTextArea1.setColumns(20);
         jTextArea1.setRows(5);
@@ -79,6 +80,16 @@ private void mostrarPerfil() {
 
         Hobbies.setText("jLabel1");
 
+        btnLike1.setFont(new java.awt.Font("Segoe UI Black", 1, 12)); // NOI18N
+        btnLike1.setForeground(new java.awt.Color(153, 153, 153));
+        btnLike1.setText("Mensaje");
+        btnLike1.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        btnLike1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLike1ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -100,7 +111,10 @@ private void mostrarPerfil() {
                                 .addComponent(lblCarrera, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(212, 212, 212)
-                        .addComponent(lblFoto)))
+                        .addComponent(lblFoto))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(202, 202, 202)
+                        .addComponent(btnLike1, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -118,7 +132,9 @@ private void mostrarPerfil() {
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnLike, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnSkip, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(80, Short.MAX_VALUE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnLike1, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(95, 95, 95))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -131,9 +147,7 @@ private void mostrarPerfil() {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(0, 0, Short.MAX_VALUE))
+            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, 455, javax.swing.GroupLayout.PREFERRED_SIZE)
         );
 
         pack();
@@ -150,6 +164,10 @@ private void mostrarPerfil() {
         
     }//GEN-LAST:event_btnSkipActionPerformed
 
+    private void btnLike1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLike1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnLike1ActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -160,6 +178,7 @@ private void siguientePerfil() {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel Hobbies;
     private javax.swing.JButton btnLike;
+    private javax.swing.JButton btnLike1;
     private javax.swing.JButton btnSkip;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
