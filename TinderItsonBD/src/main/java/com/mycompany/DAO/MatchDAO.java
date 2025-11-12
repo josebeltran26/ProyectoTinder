@@ -36,6 +36,10 @@ public class MatchDAO implements IMatchDAO {
         }
     }
 
+    public void crearConEm(Match match, EntityManager em) {
+        em.persist(match);
+    }
+
     @Override
     public Match buscarPorId(Long id) {
         EntityManager em = JpaUtil.getEntityManager();

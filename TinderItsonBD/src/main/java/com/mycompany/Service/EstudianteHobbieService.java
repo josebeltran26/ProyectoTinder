@@ -62,4 +62,9 @@ public class EstudianteHobbieService implements IEstudianteHobbieService {
     public List<EstudianteHobbie> buscarPorHobbie(Hobbie hobbie) {
         return estudianteHobbieDAO.buscarPorHobbie(hobbie);
     }
+
+    @Override
+    public boolean existeRelacion(Estudiante estudiante, Hobbie hobbie) {
+        return estudianteHobbieDAO.existeRelacion(estudiante, hobbie);
+    }
 }

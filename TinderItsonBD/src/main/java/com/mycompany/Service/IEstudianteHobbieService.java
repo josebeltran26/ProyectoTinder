@@ -28,4 +28,6 @@ public interface IEstudianteHobbieService {
     List<EstudianteHobbie> buscarPorEstudiante(Estudiante estudiante);
 
     List<EstudianteHobbie> buscarPorHobbie(Hobbie hobbie);
+
+    boolean existeRelacion(Estudiante estudiante, Hobbie hobbie);
 }

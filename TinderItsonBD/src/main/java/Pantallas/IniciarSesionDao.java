@@ -172,11 +172,13 @@ public class IniciarSesionDao extends javax.swing.JFrame {
             } else {
                 JOptionPane.showMessageDialog(this, "Credenciales incorrectas o usuario no encontrado.", "Error de Login", JOptionPane.ERROR_MESSAGE);
             }
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(this, "Error en los datos de usuario al autenticar.", "Error de Autenticación", JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Error de autenticación: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
         }
-
     }//GEN-LAST:event_BtnContinuarActionPerformed
 
     /**

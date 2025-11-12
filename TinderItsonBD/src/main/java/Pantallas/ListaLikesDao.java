@@ -109,6 +109,5 @@ public class ListaLikesDao extends javax.swing.JFrame {
 
     @SuppressWarnings("unchecked")
     private void initComponents() {
-        // Inicialización de componentes
     }
 }

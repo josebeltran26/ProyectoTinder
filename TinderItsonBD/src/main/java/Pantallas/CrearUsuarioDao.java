@@ -79,8 +79,8 @@ public class CrearUsuarioDao extends javax.swing.JFrame {
         addPlaceholder(TextContrasena, "Contraseña...");
         addPlaceholder(TextConfirmar, "Confirma La Contraseña...");
         addPlaceholder(TextCarrera, "Carrera...");
-        addPlaceholder(TextSemestres, "Ingresa tu semestre...");
-        addPlaceholder(TextHobbies, "Ingresa Tus Hobbies...");
+        addPlaceholder(TextEdad, "Ingresa tu edad...");
+        addPlaceholder(TextHobbies, "Ingresa Tus Hobbies (Separalos por comas)...");
         addPlaceholder(TextIntereses, "Ingresa Tus Intereses...");
 
     }
@@ -103,7 +103,7 @@ public class CrearUsuarioDao extends javax.swing.JFrame {
         TextCorreo = new javax.swing.JTextField();
         TextConfirmar = new javax.swing.JTextField();
         TextCarrera = new javax.swing.JTextField();
-        TextSemestres = new javax.swing.JTextField();
+        TextEdad = new javax.swing.JTextField();
         TextHobbies = new javax.swing.JTextField();
         TextIntereses = new javax.swing.JTextField();
         ButtonCrearCuenta = new javax.swing.JButton();
@@ -184,14 +184,24 @@ public class CrearUsuarioDao extends javax.swing.JFrame {
         TextCarrera.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.LOWERED));
         desktopPane.add(TextCarrera, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 400, 330, -1));
 
-        TextSemestres.setForeground(new java.awt.Color(204, 204, 204));
-        TextSemestres.setText("Ingresa tu semestre...");
-        TextSemestres.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.LOWERED));
-        desktopPane.add(TextSemestres, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 440, 330, -1));
+        TextEdad.setForeground(new java.awt.Color(204, 204, 204));
+        TextEdad.setText("Ingresa tu edad...");
+        TextEdad.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.LOWERED));
+        TextEdad.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                TextEdadActionPerformed(evt);
+            }
+        });
+        desktopPane.add(TextEdad, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 440, 330, -1));
 
         TextHobbies.setForeground(new java.awt.Color(204, 204, 204));
         TextHobbies.setText("Ingresa Tus Hobbies...");
         TextHobbies.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.LOWERED));
+        TextHobbies.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                TextHobbiesActionPerformed(evt);
+            }
+        });
         desktopPane.add(TextHobbies, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 480, 330, 40));
 
         TextIntereses.setForeground(new java.awt.Color(204, 204, 204));
@@ -226,7 +236,6 @@ public class CrearUsuarioDao extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void BtnAgregarFotoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnAgregarFotoActionPerformed
-        // TODO add your handling code here:
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setDialogTitle("Selecciona una foto");
         fileChooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter(
@@ -242,6 +251,7 @@ public class CrearUsuarioDao extends javax.swing.JFrame {
             );
             lblFoto.setIcon(new ImageIcon(img));
             lblFoto.setText(""); // quita el texto “Sin foto”
+            fotoPath = archivo.getAbsolutePath();
         }
 
     }//GEN-LAST:event_BtnAgregarFotoActionPerformed
@@ -274,17 +284,42 @@ public class CrearUsuarioDao extends javax.swing.JFrame {
             String contrasena = TextContrasena.getText().trim();
             String confirmar = TextConfirmar.getText().trim();
             String carreraStr = TextCarrera.getText().trim().toUpperCase().replace(" ", "_");
-            String hobbiesStr = TextHobbies.getText().trim() + "," + TextIntereses.getText().trim(); // Combina Hobbies e Intereses
+            String hobbiesStr = TextHobbies.getText().trim(); // Solo Hobbies
+            String interesesStr = TextIntereses.getText().trim(); // Intereses (para descripción)
 
             if (!contrasena.equals(confirmar)) {
                 JOptionPane.showMessageDialog(this, "Las contraseñas no coinciden.", "Error de Contraseña", JOptionPane.ERROR_MESSAGE);
                 return;
             }
 
-            Carrera carrera = Carrera.valueOf(carreraStr);
+            int edad;
+            String genero;
+            String edadStr = TextEdad.getText().trim();
 
-            int edad = 18; 
-            String genero = "Otro";
+            try {
+                if (edadStr.isEmpty() || edadStr.equalsIgnoreCase("Edad...")) {
+                    throw new NumberFormatException();
+                }
+                edad = Integer.parseInt(edadStr);
+                if (edad <= 0 || edad >= 100) {
+                    throw new NumberFormatException();
+                }
+            } catch (NumberFormatException ex) {
+                String edadInput = JOptionPane.showInputDialog(this, "Ingresa tu edad:", "Edad Obligatoria", JOptionPane.QUESTION_MESSAGE);
+                if (edadInput == null || edadInput.isEmpty()) {
+                    throw new Exception("Edad obligatoria.");
+                }
+                edad = Integer.parseInt(edadInput);
+            }
+
+            genero = JOptionPane.showInputDialog(this, "Ingresa tu género:", "Género Obligatorio", JOptionPane.QUESTION_MESSAGE);
+            if (genero == null || genero.trim().isEmpty()) {
+                throw new Exception("Género obligatorio.");
+            }
+            genero = genero.trim();
+
+            Carrera carrera = Carrera.valueOf(carreraStr);
+            String descripcion = interesesStr.equalsIgnoreCase("Ingresa Tus Intereses (Para la descripción)...") ? "" : interesesStr;
 
             Estudiante nuevoEstudiante = new Estudiante();
             nuevoEstudiante.setNombre(nombre + " " + apellido);
@@ -293,6 +328,7 @@ public class CrearUsuarioDao extends javax.swing.JFrame {
             nuevoEstudiante.setEdad(edad);
             nuevoEstudiante.setGenero(genero);
             nuevoEstudiante.setFotoUsuarioUrl(fotoPath);
+            nuevoEstudiante.setDescripcion(descripcion); 
 
             estudianteService.crearEstudiante(nuevoEstudiante);
 
@@ -305,8 +341,8 @@ public class CrearUsuarioDao extends javax.swing.JFrame {
             for (String hobbieNombreCompleto : hobbiesArray) {
                 String hobbieNombre = hobbieNombreCompleto.trim();
 
-                if (hobbieNombre.isEmpty() || hobbieNombre.equalsIgnoreCase("Ingresa Tus Hobbies...") || hobbieNombre.equalsIgnoreCase("Ingresa Tus Intereses...")) {
-                    continue; 
+                if (hobbieNombre.isEmpty() || hobbieNombre.equalsIgnoreCase("Ingresa Tus Hobbies (Separados por coma)...")) {
+                    continue;
                 }
 
                 List<Hobbie> hobbiesEncontrados = hobbieService.buscarPorNombre(hobbieNombre);
@@ -320,11 +356,12 @@ public class CrearUsuarioDao extends javax.swing.JFrame {
                     hobbie = hobbiesEncontrados.get(0);
                 }
 
-                EstudianteHobbie eh = new EstudianteHobbie();
-                eh.setEstudiante(nuevoEstudiante);
-                eh.setHobbie(hobbie);
-
-                estudianteHobbieService.crearEstudianteHobbie(eh);
+                if (!estudianteHobbieService.existeRelacion(nuevoEstudiante, hobbie)) {
+                    EstudianteHobbie eh = new EstudianteHobbie();
+                    eh.setEstudiante(nuevoEstudiante);
+                    eh.setHobbie(hobbie);
+                    estudianteHobbieService.crearEstudianteHobbie(eh);
+                }
             }
 
             JOptionPane.showMessageDialog(this, "Cuenta creada exitosamente. Ahora inicia sesión.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
@@ -334,13 +371,20 @@ public class CrearUsuarioDao extends javax.swing.JFrame {
             this.dispose();
 
         } catch (IllegalArgumentException e) {
-            JOptionPane.showMessageDialog(this, "La carrera ingresada no es válida.", "Error de Carrera", JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "La carrera ingresada no es válida. Carreras válidas: ING_SOFTWARE, ING_MECATRONICA, ING_ELECTRONICA, ING_QUIMICA, DISEÑO_GRAFICO", "Error de Carrera", JOptionPane.ERROR_MESSAGE);
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Error al crear la cuenta: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
         }
-
     }//GEN-LAST:event_ButtonCrearCuentaActionPerformed
+
+    private void TextEdadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TextEdadActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_TextEdadActionPerformed
+
+    private void TextHobbiesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_TextHobbiesActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_TextHobbiesActionPerformed
 
     /**
      * @param args the command line arguments
@@ -354,10 +398,10 @@ public class CrearUsuarioDao extends javax.swing.JFrame {
     private javax.swing.JTextField TextConfirmar;
     private javax.swing.JTextField TextContrasena;
     private javax.swing.JTextField TextCorreo;
+    private javax.swing.JTextField TextEdad;
     private javax.swing.JTextField TextHobbies;
     private javax.swing.JTextField TextIntereses;
     private javax.swing.JTextField TextNombre;
-    private javax.swing.JTextField TextSemestres;
     private javax.swing.JDesktopPane desktopPane;
     private javax.swing.JLabel lblFoto;
     // End of variables declaration//GEN-END:variables

@@ -11,6 +11,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 import java.io.Serializable;
@@ -22,6 +23,7 @@ import java.util.Objects;
  * @author Josel
  */
 @Entity
+@Table(name = "tinder_like")
 public class Like implements Serializable {
 
     @Id

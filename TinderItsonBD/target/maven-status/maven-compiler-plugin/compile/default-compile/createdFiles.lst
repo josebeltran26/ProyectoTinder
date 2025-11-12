@@ -1,7 +1,9 @@
+Pantallas\PerfilesDao$3.class
 com\mycompany\DAO\MatchDAO.class
 Pantallas\CrearUsuarioDao$2.class
 com\mycompany\entities\Hobbie.class
 com\mycompany\entities\Telefono.class
+com\mycompany\Sockets\ClienteChat.class
 com\mycompany\DAO\IEstudianteDAO.class
 com\mycompany\Service\TelefonoService.class
 Pantallas\IniciarSesionDao.class
@@ -9,6 +11,7 @@ Pantallas\CuentaDao$1.class
 com\mycompany\DAO\HobbieDAO.class
 Pantallas\CrearUsuarioDao$6.class
 com\mycompany\Service\IEstudianteHobbieService.class
+Pantallas\CrearUsuarioDao$9.class
 com\mycompany\DAO\CorreoDAO.class
 Pantallas\PerfilesDao.class
 Pantallas\CrearUsuarioDao$1.class
@@ -25,6 +28,7 @@ com\mycompany\DAO\IMensajeDAO.class
 com\mycompany\entities\Match.class
 com\mycompany\Service\IHobbieService.class
 com\mycompany\Service\IMatchService.class
+com\mycompany\Sockets\ServidorChat$ManejadorCliente.class
 Pantallas\InicioDao.class
 com\mycompany\DAO\EstudianteHobbieDAO.class
 com\mycompany\DAO\ITelefonoDAO.class
@@ -35,12 +39,15 @@ Pantallas\PerfilesDao$2.class
 Pantallas\IniciarSesionDao$1.class
 com\mycompany\Service\HobbieService.class
 Pantallas\CrearUsuarioDao$5.class
+com\mycompany\Sockets\ServidorChat.class
 com\mycompany\Service\IMensajeService.class
+Pantallas\CrearUsuarioDao$10.class
 com\mycompany\Service\EstudianteService.class
 Pantallas\PerfilesDao$1.class
 com\mycompany\entities\Like.class
 Pantallas\InicioDao$1.class
 com\mycompany\Service\ITelefonoService.class
+com\mycompany\util\SessionManager.class
 com\mycompany\DAO\IHobbieDAO.class
 com\mycompany\DAO\TelefonoDAO.class
 Pantallas\CrearUsuarioDao$7.class
@@ -54,9 +61,11 @@ com\mycompany\Service\LikeService.class
 com\mycompany\entities\Carrera.class
 com\mycompany\entities\Mensaje.class
 Pantallas\ChatDao.class
+Pantallas\ListaLikesDao.class
 Pantallas\CuentaDao.class
 Pantallas\CrearUsuarioDao$3.class
 Pantallas\IniciarSesionDao$2.class
+Pantallas\PerfilesDao$4.class
 Pantallas\CrearUsuarioDao.class
 com\mycompany\Service\EstudianteHobbieService.class
 com\mycompany\Service\MatchService.class

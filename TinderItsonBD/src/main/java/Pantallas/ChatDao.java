@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Comparator;
+import java.util.List;
 
 /**
  *
@@ -95,25 +96,28 @@ public class ChatDao extends JFrame {
         if (estudianteLogueado == null || otroEstudiante == null) {
             return;
         }
+        new Thread(() -> {
+            try {
+                List<Mensaje> mensajes = mensajeService.buscarMensajesEntreEstudiantes(estudianteLogueado, otroEstudiante);
 
-        try {
-            List<Mensaje> mensajes = mensajeService.buscarMensajesEntreEstudiantes(estudianteLogueado, otroEstudiante);
-            mensajes.sort(Comparator.comparing(Mensaje::getFechaHora));
+                SwingUtilities.invokeLater(() -> {
+                    panelMensajes.removeAll();
 
-            panelMensajes.removeAll();
+                    for (Mensaje mensaje : mensajes) {
+                        boolean esTuyo = mensaje.getEmisor().getId().equals(estudianteLogueado.getId());
+                        agregarBurbuja(mensaje.getContenido(), esTuyo, mensaje.getFechaHora());
+                    }
 
-            for (Mensaje mensaje : mensajes) {
-                boolean esTuyo = mensaje.getEmisor().getId().equals(estudianteLogueado.getId());
-                agregarBurbuja(mensaje.getContenido(), esTuyo, mensaje.getFechaHora());
+                    JScrollBar sb = scrollPane.getVerticalScrollBar();
+                    sb.setValue(sb.getMaximum());
+                });
+
+            } catch (Exception e) {
+                SwingUtilities.invokeLater(() -> {
+                    JOptionPane.showMessageDialog(this, "Error al cargar historial: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                });
             }
-
-            SwingUtilities.invokeLater(() -> {
-                JScrollBar sb = scrollPane.getVerticalScrollBar();
-                sb.setValue(sb.getMaximum());
-            });
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Error al cargar historial: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        }
+        }).start();
     }
 
     private void enviarMensaje() {

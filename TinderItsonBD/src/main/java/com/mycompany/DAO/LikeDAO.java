@@ -37,6 +37,10 @@ public class LikeDAO implements ILikeDAO {
         }
     }
 
+    public void crearConEm(Like like, EntityManager em) {
+        em.persist(like);
+    }
+
     @Override
     public Like buscarPorId(Long id) {
         EntityManager em = JpaUtil.getEntityManager();
@@ -162,7 +166,6 @@ public class LikeDAO implements ILikeDAO {
         EntityTransaction tx = em.getTransaction();
         try {
             tx.begin();
-            // Buscar y luego eliminar el Like
             Like like = buscarLikePorEmisorYReceptor(emisor, receptor);
             if (like != null) {
                 em.remove(em.contains(like) ? like : em.merge(like));

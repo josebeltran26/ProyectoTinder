@@ -11,6 +11,9 @@ import com.mycompany.DAO.MatchDAO;
 import com.mycompany.entities.Estudiante;
 import com.mycompany.entities.Like;
 import com.mycompany.entities.Match;
+import com.mycompany.util.JpaUtil;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityTransaction;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -29,14 +32,29 @@ public class LikeService implements ILikeService {
             throw new Exception("Estudiantes obligatorios");
         }
 
-        likeDAO.crear(like);
+        EntityManager em = JpaUtil.getEntityManager();
+        EntityTransaction tx = em.getTransaction();
+        try {
+            tx.begin();
 
-        if (likeDAO.existeLikeMutuo(like.getEmisor(), like.getReceptor()) && !matchDAO.existeMatch(like.getEmisor(), like.getReceptor())) {
-            Match match = new Match();
-            match.setEstudiante1(like.getEmisor());
-            match.setEstudiante2(like.getReceptor());
-            match.setFechaHora(LocalDateTime.now());
-            matchDAO.crear(match);
+            ((LikeDAO) likeDAO).crearConEm(like, em);
+
+            if (likeDAO.existeLikeMutuo(like.getEmisor(), like.getReceptor()) && !matchDAO.existeMatch(like.getEmisor(), like.getReceptor())) {
+                Match match = new Match();
+                match.setEstudiante1(like.getEmisor());
+                match.setEstudiante2(like.getReceptor());
+                match.setFechaHora(LocalDateTime.now());
+                ((MatchDAO) matchDAO).crearConEm(match, em);
+            }
+
+            tx.commit();
+        } catch (Exception e) {
+            if (tx.isActive()) {
+                tx.rollback();
+            }
+            throw e;
+        } finally {
+            em.close();
         }
     }
 

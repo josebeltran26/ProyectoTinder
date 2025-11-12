@@ -39,11 +39,15 @@ C:\Users\Josel\OneDrive\Documentos\NetBeansProjects\hola\ProyectoTinder\TinderIt
 C:\Users\Josel\OneDrive\Documentos\NetBeansProjects\hola\ProyectoTinder\TinderItsonBD\src\main\java\com\mycompany\Service\MatchService.java
 C:\Users\Josel\OneDrive\Documentos\NetBeansProjects\hola\ProyectoTinder\TinderItsonBD\src\main\java\com\mycompany\Service\MensajeService.java
 C:\Users\Josel\OneDrive\Documentos\NetBeansProjects\hola\ProyectoTinder\TinderItsonBD\src\main\java\com\mycompany\Service\TelefonoService.java
+C:\Users\Josel\OneDrive\Documentos\NetBeansProjects\hola\ProyectoTinder\TinderItsonBD\src\main\java\com\mycompany\Sockets\ClienteChat.java
+C:\Users\Josel\OneDrive\Documentos\NetBeansProjects\hola\ProyectoTinder\TinderItsonBD\src\main\java\com\mycompany\Sockets\ServidorChat.java
 C:\Users\Josel\OneDrive\Documentos\NetBeansProjects\hola\ProyectoTinder\TinderItsonBD\src\main\java\com\mycompany\tinderitsonbd\TinderItsonBD.java
 C:\Users\Josel\OneDrive\Documentos\NetBeansProjects\hola\ProyectoTinder\TinderItsonBD\src\main\java\com\mycompany\util\JpaUtil.java
+C:\Users\Josel\OneDrive\Documentos\NetBeansProjects\hola\ProyectoTinder\TinderItsonBD\src\main\java\com\mycompany\util\SessionManager.java
 C:\Users\Josel\OneDrive\Documentos\NetBeansProjects\hola\ProyectoTinder\TinderItsonBD\src\main\java\Pantallas\ChatDao.java
 C:\Users\Josel\OneDrive\Documentos\NetBeansProjects\hola\ProyectoTinder\TinderItsonBD\src\main\java\Pantallas\CrearUsuarioDao.java
 C:\Users\Josel\OneDrive\Documentos\NetBeansProjects\hola\ProyectoTinder\TinderItsonBD\src\main\java\Pantallas\CuentaDao.java
 C:\Users\Josel\OneDrive\Documentos\NetBeansProjects\hola\ProyectoTinder\TinderItsonBD\src\main\java\Pantallas\IniciarSesionDao.java
 C:\Users\Josel\OneDrive\Documentos\NetBeansProjects\hola\ProyectoTinder\TinderItsonBD\src\main\java\Pantallas\InicioDao.java
+C:\Users\Josel\OneDrive\Documentos\NetBeansProjects\hola\ProyectoTinder\TinderItsonBD\src\main\java\Pantallas\ListaLikesDao.java
 C:\Users\Josel\OneDrive\Documentos\NetBeansProjects\hola\ProyectoTinder\TinderItsonBD\src\main\java\Pantallas\PerfilesDao.java

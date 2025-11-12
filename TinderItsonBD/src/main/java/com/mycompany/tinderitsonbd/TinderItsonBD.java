@@ -16,18 +16,18 @@ import jakarta.persistence.Persistence;
 public class TinderItsonBD {
 
     public static void main(String[] args) {
-        EntityManagerFactory emf = Persistence.createEntityManagerFactory("");
-        EntityManager em = emf.createEntityManager();
+        EntityManagerFactory emf=Persistence.createEntityManagerFactory("TinderItsonPU");
+        EntityManager em=emf.createEntityManager();
     }
 //        try {
 //            javax.swing.SwingUtilities.invokeLater(() -> {
 //                InicioDao dialog = new InicioDao(new javax.swing.JFrame(), true);
 //                dialog.setVisible(true);
 //            });
-//            
+//
 //        } catch (Exception e) {
 //            System.err.println("Error al iniciar la aplicación: " + e.getMessage());
 //            e.printStackTrace();
 //        }
 //    }
-    }
+}

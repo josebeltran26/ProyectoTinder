@@ -27,9 +27,13 @@ public class MensajeService implements IMensajeService {
         if (mensaje.getContenido() == null || mensaje.getContenido().isEmpty()) {
             throw new Exception("Contenido obligatorio");
         }
-        if (mensaje.getContenido() == null) {
-            throw new Exception("Estudiante obligatorio");
+        if (mensaje.getEmisor() == null) {
+            throw new Exception("Emisor obligatorio");
         }
+        if (mensaje.getMatch() == null) {
+            throw new Exception("Match obligatorio");
+        }
+
         if (mensaje.getFechaHora() != null && mensaje.getFechaHora().isAfter(LocalDateTime.now())) {
             throw new Exception("Fecha no puede ser futura");
         }
