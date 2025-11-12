@@ -13,22 +13,25 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.Table;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
 import java.io.Serializable;
-import java.time.LocalDateTime;
-import java.util.Set;
+import java.util.Calendar;
+import java.util.List;
 
 /**
  *
  * @author Josel
  */
 @Entity
-@Table(name = "Estudiante_match")
 public class Match implements Serializable {
-
-    @Id
+@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "fecha_hora", nullable = false)
+    private Calendar fechaHora;
 
     @ManyToOne
     @JoinColumn(name = "estudiante1_id", nullable = false)
@@ -37,26 +40,29 @@ public class Match implements Serializable {
     @ManyToOne
     @JoinColumn(name = "estudiante2_id", nullable = false)
     private Estudiante estudiante2;
-
-    @Column(name = "fecha_hora")
-    private LocalDateTime fechaHora;
+    
+    @OneToMany(mappedBy = "match", cascade = CascadeType.ALL)
+    private List<Mensaje> mensajes;
 
     public Match() {
+        this.fechaHora = Calendar.getInstance();
     }
 
-    public Match(Long id, Estudiante estudiante1, Estudiante estudiante2, LocalDateTime fechaHora) {
-        this.id = id;
-        this.estudiante1 = estudiante1;
-        this.estudiante2 = estudiante2;
-        this.fechaHora = fechaHora;
-    }
-    
+
     public Long getId() {
         return id;
     }
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public Calendar getFechaHora() {
+        return fechaHora;
+    }
+
+    public void setFechaHora(Calendar fechaHora) {
+        this.fechaHora = fechaHora;
     }
 
     public Estudiante getEstudiante1() {
@@ -75,13 +81,18 @@ public class Match implements Serializable {
         this.estudiante2 = estudiante2;
     }
 
-    public LocalDateTime getFechaHora() {
-        return fechaHora;
+    public List<Mensaje> getMensajes() {
+        return mensajes;
     }
 
-    public void setFechaHora(LocalDateTime fechaHora) {
-        this.fechaHora = fechaHora;
+    public void setMensajes(List<Mensaje> mensajes) {
+        this.mensajes = mensajes;
     }
 
-
+  
+    @Override
+    public String toString() {
+        return "com.mycompany.tinderitsonbd.entities.Match[ id=" + id + " ]";
+    }
+    
 }

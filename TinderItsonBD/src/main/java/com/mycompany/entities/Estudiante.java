@@ -14,7 +14,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import java.io.Serializable;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
@@ -26,49 +27,47 @@ public class Estudiante implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    @Column
+    @Column(name = "nombre")
     private String nombre;
-
-    @Column
+    @Column(name = "descripcion")
     private String descripcion;
-
+    @Column(name = "edad")
     private int edad;
+    @Column(name = "genero")
     private String genero;
     @Enumerated(EnumType.STRING)
     @Column(name = "carrera")
     private Carrera carrera;
+    @Column(name = "foto_usuario_url", length = 500)
+    private String fotoUsuarioUrl;
     @OneToMany(mappedBy = "estudiante", cascade = CascadeType.ALL)
-    private Set<Correo> correos;
+    private List<Correo> correos;
     @OneToMany(mappedBy = "estudiante", cascade = CascadeType.ALL)
-    private Set<Telefono> telefonos;
+    private List<Telefono> telefonos;
     @OneToMany(mappedBy = "estudiante", cascade = CascadeType.ALL)
-    private Set<EstudianteHobbie> estudianteHobbies;
-    @OneToMany(mappedBy = "likeD", cascade = CascadeType.ALL)
-    private Set<Like> likesDados;
-    @OneToMany(mappedBy = "likeR", cascade = CascadeType.ALL)
-    private Set<Like> likesRecibidos;
-    @OneToMany(mappedBy = "mensaje", cascade = CascadeType.ALL)
-    private Set<Mensaje> mensajesEnviados;
+    private List<EstudianteHobbie> estudianteHobbies;
+    @OneToMany(mappedBy = "emisor", cascade = CascadeType.ALL)
+    private List<Like> likesEnviados;
+    @OneToMany(mappedBy = "receptor", cascade = CascadeType.ALL)
+    private List<Like> likesRecibidos;
+    @OneToMany(mappedBy = "estudiante1", cascade = CascadeType.ALL)
+    private List<Match> matchesComoEstudiante1;
+    @OneToMany(mappedBy = "estudiante2", cascade = CascadeType.ALL)
+    private List<Match> matchesComoEstudiante2;
+    @OneToMany(mappedBy = "emisor", cascade = CascadeType.ALL)
+    private List<Mensaje> mensajesEnviados;
 
     public Estudiante() {
+        this.correos = new ArrayList<>();
+        this.telefonos = new ArrayList<>();
+        this.estudianteHobbies = new ArrayList<>();
+        this.likesEnviados = new ArrayList<>();
+        this.likesRecibidos = new ArrayList<>();
+        this.matchesComoEstudiante1 = new ArrayList<>();
+        this.matchesComoEstudiante2 = new ArrayList<>();
+        this.mensajesEnviados = new ArrayList<>();
     }
 
-    public Estudiante(Long id, String nombre, String descripcion, int edad, String genero, Carrera carrera, Set<Correo> correos, Set<Telefono> telefonos, Set<EstudianteHobbie> estudianteHobbies, Set<Like> likesDados, Set<Like> likesRecibidos, Set<Mensaje> mensajesEnviados) {
-        this.id = id;
-        this.nombre = nombre;
-        this.descripcion = descripcion;
-        this.edad = edad;
-        this.genero = genero;
-        this.carrera = carrera;
-        this.correos = correos;
-        this.telefonos = telefonos;
-        this.estudianteHobbies = estudianteHobbies;
-        this.likesDados = likesDados;
-        this.likesRecibidos = likesRecibidos;
-        this.mensajesEnviados = mensajesEnviados;
-    }
-    
     public Long getId() {
         return id;
     }
@@ -117,51 +116,81 @@ public class Estudiante implements Serializable {
         this.carrera = carrera;
     }
 
-    public Set<Correo> getCorreos() {
+    public String getFotoUsuarioUrl() {
+        return fotoUsuarioUrl;
+    }
+
+    public void setFotoUsuarioUrl(String fotoUsuarioUrl) {
+        this.fotoUsuarioUrl = fotoUsuarioUrl;
+    }
+
+    public List<Correo> getCorreos() {
         return correos;
     }
 
-    public void setCorreos(Set<Correo> correos) {
+    public void setCorreos(List<Correo> correos) {
         this.correos = correos;
     }
 
-    public Set<Telefono> getTelefonos() {
+    public List<Telefono> getTelefonos() {
         return telefonos;
     }
 
-    public void setTelefonos(Set<Telefono> telefonos) {
+    public void setTelefonos(List<Telefono> telefonos) {
         this.telefonos = telefonos;
     }
 
-    public Set<EstudianteHobbie> getEstudianteHobbies() {
+    public List<EstudianteHobbie> getEstudianteHobbies() {
         return estudianteHobbies;
     }
 
-    public void setEstudianteHobbies(Set<EstudianteHobbie> estudianteHobbies) {
+    public void setEstudianteHobbies(List<EstudianteHobbie> estudianteHobbies) {
         this.estudianteHobbies = estudianteHobbies;
     }
 
-    public Set<Like> getLikesDados() {
-        return likesDados;
+    public List<Like> getLikesEnviados() {
+        return likesEnviados;
     }
 
-    public void setLikesDados(Set<Like> likesDados) {
-        this.likesDados = likesDados;
+    public void setLikesEnviados(List<Like> likesEnviados) {
+        this.likesEnviados = likesEnviados;
     }
 
-    public Set<Like> getLikesRecibidos() {
+    public List<Like> getLikesRecibidos() {
         return likesRecibidos;
     }
 
-    public void setLikesRecibidos(Set<Like> likesRecibidos) {
+    public void setLikesRecibidos(List<Like> likesRecibidos) {
         this.likesRecibidos = likesRecibidos;
     }
 
-    public Set<Mensaje> getMensajesEnviados() {
+    public List<Match> getMatchesComoEstudiante1() {
+        return matchesComoEstudiante1;
+    }
+
+    public void setMatchesComoEstudiante1(List<Match> matchesComoEstudiante1) {
+        this.matchesComoEstudiante1 = matchesComoEstudiante1;
+    }
+
+    public List<Match> getMatchesComoEstudiante2() {
+        return matchesComoEstudiante2;
+    }
+
+    public void setMatchesComoEstudiante2(List<Match> matchesComoEstudiante2) {
+        this.matchesComoEstudiante2 = matchesComoEstudiante2;
+    }
+
+    public List<Mensaje> getMensajesEnviados() {
         return mensajesEnviados;
     }
 
-    public void setMensajesEnviados(Set<Mensaje> mensajesEnviados) {
+    public void setMensajesEnviados(List<Mensaje> mensajesEnviados) {
         this.mensajesEnviados = mensajesEnviados;
     }
+
+    @Override
+    public String toString() {
+        return "com.mycompany.tinderitsonbd.entities.Estudiante[ id=" + id + " ]";
+    }
+
 }

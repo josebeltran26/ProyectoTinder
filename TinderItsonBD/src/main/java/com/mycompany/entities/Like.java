@@ -4,6 +4,7 @@
  */
 package com.mycompany.entities;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -11,7 +12,10 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.Temporal;
+import jakarta.persistence.TemporalType;
 import java.io.Serializable;
+import java.util.Calendar;
 
 /**
  *
@@ -24,25 +28,22 @@ public class Like implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String tipo;
+
+    @Temporal(TemporalType.TIMESTAMP)
+    @Column(name = "fecha_hora", nullable = false)
+    private Calendar fechaHora;
     @ManyToOne
-    @JoinColumn(name = "liker_id")
-    private Estudiante likeD;
+    @JoinColumn(name = "emisor_id", nullable = false)
+    private Estudiante emisor;
 
     @ManyToOne
-    @JoinColumn(name = "liked_id")
-    private Estudiante likeR;
+    @JoinColumn(name = "receptor_id", nullable = false)
+    private Estudiante receptor;
 
     public Like() {
+        this.fechaHora = Calendar.getInstance(); 
     }
 
-    public Like(Long id, String tipo, Estudiante likeD, Estudiante likeR) {
-        this.id = id;
-        this.tipo = tipo;
-        this.likeD = likeD;
-        this.likeR= likeR;
-    }
-    
     public Long getId() {
         return id;
     }
@@ -51,27 +52,33 @@ public class Like implements Serializable {
         this.id = id;
     }
 
-    public String getTipo() {
-        return tipo;
+    public Calendar getFechaHora() {
+        return fechaHora;
     }
 
-    public void setTipo(String tipo) {
-        this.tipo = tipo;
+    public void setFechaHora(Calendar fechaHora) {
+        this.fechaHora = fechaHora;
     }
 
-    public Estudiante getLikeD() {
-        return likeD;
+    public Estudiante getEmisor() {
+        return emisor;
     }
 
-    public void setLikeR(Estudiante likeD) {
-        this.likeD = likeD;
+    public void setEmisor(Estudiante emisor) {
+        this.emisor = emisor;
     }
 
-    public Estudiante getLikeR() {
-        return likeR;
+    public Estudiante getReceptor() {
+        return receptor;
     }
 
-    public void setLikeD(Estudiante likeR) {
-        this.likeR = likeR;
+    public void setReceptor(Estudiante receptor) {
+        this.receptor = receptor;
     }
+
+    @Override
+    public String toString() {
+        return "com.mycompany.tinderitsonbd.entities.Like[ id=" + id + " ]";
+    }
+
 }

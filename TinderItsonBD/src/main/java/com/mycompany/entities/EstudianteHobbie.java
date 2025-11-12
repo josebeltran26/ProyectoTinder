@@ -24,22 +24,16 @@ public class EstudianteHobbie implements Serializable {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "estudiante_id")
+    @JoinColumn(name = "estudiante_id", nullable = false)
     private Estudiante estudiante;
 
     @ManyToOne
-    @JoinColumn(name = "hobbie_id")
+    @JoinColumn(name = "hobbie_id", nullable = false)
     private Hobbie hobbie;
 
     public EstudianteHobbie() {
     }
 
-    public EstudianteHobbie(Long id, Estudiante estudiante, Hobbie hobbie) {
-        this.id = id;
-        this.estudiante = estudiante;
-        this.hobbie = hobbie;
-    }
-    
     public Long getId() {
         return id;
     }
@@ -63,4 +57,10 @@ public class EstudianteHobbie implements Serializable {
     public void setHobbie(Hobbie hobbie) {
         this.hobbie = hobbie;
     }
+
+    @Override
+    public String toString() {
+        return "com.mycompany.tinderitsonbd.entities.EstudianteHobbie[ id=" + id + " ]";
+    }
+
 }

@@ -25,24 +25,22 @@ public class Mensaje implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column
+    @Column(name = "contenido", nullable = false, columnDefinition = "TEXT")
     private String contenido;
 
-    @Column(name = "fecha_hora")
+    @Column(name = "fecha_hora", nullable = false)
     private LocalDateTime fechaHora;
 
     @ManyToOne
-    @JoinColumn(name = "mensaje_id")
-    private Estudiante mensaje;
+    @JoinColumn(name = "emisor_id", nullable = false)
+    private Estudiante emisor;
+
+    @ManyToOne
+    @JoinColumn(name = "match_id", nullable = false)
+    private Match match;
 
     public Mensaje() {
-    }
-
-    public Mensaje(Long id, String contenido, LocalDateTime fechaHora, Estudiante mensaje) {
-        this.id = id;
-        this.contenido = contenido;
-        this.fechaHora = fechaHora;
-        this.mensaje = mensaje;
+        this.fechaHora = LocalDateTime.now();
     }
 
     public Long getId() {
@@ -69,13 +67,24 @@ public class Mensaje implements Serializable {
         this.fechaHora = fechaHora;
     }
 
-    public Estudiante getmensaje() {
-        return mensaje;
+    public Estudiante getEmisor() {
+        return emisor;
     }
 
-    public void setmensaje(Estudiante mensaje) {
-        this.mensaje = mensaje;
+    public void setEmisor(Estudiante emisor) {
+        this.emisor = emisor;
     }
 
-  
+    public Match getMatch() {
+        return match;
+    }
+
+    public void setMatch(Match match) {
+        this.match = match;
+    }
+
+    @Override
+    public String toString() {
+        return "com.mycompany.tinderitsonbd.entities.Mensaje[ id=" + id + " ]";
+    }
 }

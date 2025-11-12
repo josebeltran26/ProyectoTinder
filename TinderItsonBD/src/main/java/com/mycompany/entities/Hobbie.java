@@ -12,7 +12,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.OneToMany;
 import java.io.Serializable;
-import java.util.Set;
+import java.util.List;
 
 /**
  *
@@ -24,25 +24,16 @@ public class Hobbie implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
+    @Column(name = "nombre")
     private String nombre;
-
-    @Column
+    @Column(name = "descripcion")
     private String descripcion;
-
     @OneToMany(mappedBy = "hobbie", cascade = CascadeType.ALL)
-    private Set<EstudianteHobbie> estudianteHobbies;
+    private List<EstudianteHobbie> estudianteHobbies;
 
     public Hobbie() {
     }
 
-    public Hobbie(Long id, String nombre, String descripcion, Set<EstudianteHobbie> estudianteHobbies) {
-        this.id = id;
-        this.nombre = nombre;
-        this.descripcion = descripcion;
-        this.estudianteHobbies = estudianteHobbies;
-    }
-    
     public Long getId() {
         return id;
     }
@@ -67,11 +58,17 @@ public class Hobbie implements Serializable {
         this.descripcion = descripcion;
     }
 
-    public Set<EstudianteHobbie> getEstudianteHobbies() {
+    public List<EstudianteHobbie> getEstudianteHobbies() {
         return estudianteHobbies;
     }
 
-    public void setEstudianteHobbies(Set<EstudianteHobbie> estudianteHobbies) {
+    public void setEstudianteHobbies(List<EstudianteHobbie> estudianteHobbies) {
         this.estudianteHobbies = estudianteHobbies;
     }
-}
+
+    
+    @Override
+    public String toString() {
+        return "com.mycompany.tinderitsonbd.entities.Hobbie[ id=" + id + " ]";
+    
+}}

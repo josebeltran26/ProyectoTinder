@@ -4,6 +4,20 @@
  */
 package Pantallas;
 
+import com.mycompany.Service.CorreoService;
+import com.mycompany.Service.EstudianteHobbieService;
+import com.mycompany.Service.EstudianteService;
+import com.mycompany.Service.HobbieService;
+import com.mycompany.Service.ICorreoService;
+import com.mycompany.Service.IEstudianteHobbieService;
+import com.mycompany.Service.IEstudianteService;
+import com.mycompany.Service.IHobbieService;
+import com.mycompany.entities.Carrera;
+import com.mycompany.entities.Correo;
+import com.mycompany.entities.Estudiante;
+import com.mycompany.entities.EstudianteHobbie;
+import com.mycompany.entities.Hobbie;
+
 import java.awt.Color;
 import java.awt.Image;
 import java.io.File;
@@ -16,46 +30,55 @@ import javax.swing.JTextField;
  * @author manue
  */
 public class CrearUsuarioDao extends javax.swing.JFrame {
-private void addPlaceholder(JTextField campo, String texto) {
-    campo.setText(texto);
-    campo.setForeground(Color.GRAY);
 
-    campo.addFocusListener(new java.awt.event.FocusAdapter() {
-        @Override
-        public void focusGained(java.awt.event.FocusEvent e) {
-            if (campo.getText().equals(texto)) {
-                campo.setText("");
-                campo.setForeground(Color.BLACK);
-            }
-        }
+    private final IEstudianteService estudianteService;
+    private final ICorreoService correoService;
+    private final IHobbieService hobbieService;
+    private final IEstudianteHobbieService estudianteHobbieService;
 
-        @Override
-        public void focusLost(java.awt.event.FocusEvent e) {
-            if (campo.getText().isEmpty()) {
-                campo.setText(texto);
-                campo.setForeground(Color.GRAY);
+    private void addPlaceholder(JTextField campo, String texto) {
+        campo.setText(texto);
+        campo.setForeground(Color.GRAY);
+
+        campo.addFocusListener(new java.awt.event.FocusAdapter() {
+            @Override
+            public void focusGained(java.awt.event.FocusEvent e) {
+                if (campo.getText().equals(texto)) {
+                    campo.setText("");
+                    campo.setForeground(Color.BLACK);
+                }
             }
-        }
-    });
-}
+
+            @Override
+            public void focusLost(java.awt.event.FocusEvent e) {
+                if (campo.getText().isEmpty()) {
+                    campo.setText(texto);
+                    campo.setForeground(Color.GRAY);
+                }
+            }
+        });
+    }
+
     /**
      * Creates new form CrearUsuarioDao
      */
     public CrearUsuarioDao() {
         initComponents();
+
+        this.estudianteService = new EstudianteService();
+        this.correoService = new CorreoService();
+        this.hobbieService = new HobbieService();
+        this.estudianteHobbieService = new EstudianteHobbieService();
+
         addPlaceholder(TextNombre, "Nombre...");
-addPlaceholder(TextApellido, "Apellido...");
-addPlaceholder(TextCorreo, "Correo...");
-addPlaceholder(TextContrasena, "Contraseña...");
-addPlaceholder(TextConfirmar, "Confirma La Contraseña...");
-addPlaceholder(TextCarrera, "Carrera...");
-addPlaceholder(TextSemestres, "Ingresa tu semestre...");
-addPlaceholder(TextHobbies, "Ingresa Tus Hobbies...");
-addPlaceholder(TextIntereses, "Ingresa Tus Intereses...");
-
-
-
-
+        addPlaceholder(TextApellido, "Apellido...");
+        addPlaceholder(TextCorreo, "Correo...");
+        addPlaceholder(TextContrasena, "Contraseña...");
+        addPlaceholder(TextConfirmar, "Confirma La Contraseña...");
+        addPlaceholder(TextCarrera, "Carrera...");
+        addPlaceholder(TextSemestres, "Ingresa tu semestre...");
+        addPlaceholder(TextHobbies, "Ingresa Tus Hobbies...");
+        addPlaceholder(TextIntereses, "Ingresa Tus Intereses...");
 
     }
 
@@ -202,21 +225,21 @@ addPlaceholder(TextIntereses, "Ingresa Tus Intereses...");
     private void BtnAgregarFotoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnAgregarFotoActionPerformed
         // TODO add your handling code here:
         JFileChooser fileChooser = new JFileChooser();
-fileChooser.setDialogTitle("Selecciona una foto");
-fileChooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter(
-    "Imágenes (JPG, PNG)", "jpg", "jpeg", "png"));
+        fileChooser.setDialogTitle("Selecciona una foto");
+        fileChooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter(
+                "Imágenes (JPG, PNG)", "jpg", "jpeg", "png"));
 
-if (fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
-    File archivo = fileChooser.getSelectedFile();
-    ImageIcon icono = new ImageIcon(archivo.getAbsolutePath());
-    Image img = icono.getImage().getScaledInstance(
-        lblFoto.getWidth(),
-        lblFoto.getHeight(),
-        Image.SCALE_SMOOTH
-    );
-    lblFoto.setIcon(new ImageIcon(img));
-    lblFoto.setText(""); // quita el texto “Sin foto”
-}
+        if (fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
+            File archivo = fileChooser.getSelectedFile();
+            ImageIcon icono = new ImageIcon(archivo.getAbsolutePath());
+            Image img = icono.getImage().getScaledInstance(
+                    lblFoto.getWidth(),
+                    lblFoto.getHeight(),
+                    Image.SCALE_SMOOTH
+            );
+            lblFoto.setIcon(new ImageIcon(img));
+            lblFoto.setText(""); // quita el texto “Sin foto”
+        }
 
     }//GEN-LAST:event_BtnAgregarFotoActionPerformed
 
@@ -243,14 +266,13 @@ if (fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
     private void ButtonCrearCuentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ButtonCrearCuentaActionPerformed
         // TODO add your handling code here:
         IniciarSesionDao a = new IniciarSesionDao();
-                a.setVisible(true);
-                this.dispose();
+        a.setVisible(true);
+        this.dispose();
     }//GEN-LAST:event_ButtonCrearCuentaActionPerformed
 
     /**
      * @param args the command line arguments
      */
-  
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton BtnAgregarFoto;

@@ -3,6 +3,7 @@
  */
 package com.mycompany.tinderitsonbd;
 
+import Pantallas.InicioDao;
 import com.mycompany.util.JpaUtil;
 
 /**
@@ -12,6 +13,15 @@ import com.mycompany.util.JpaUtil;
 public class TinderItsonBD {
 
     public static void main(String[] args) {
-        JpaUtil x = new JpaUtil();
+        try {
+            javax.swing.SwingUtilities.invokeLater(() -> {
+                InicioDao dialog = new InicioDao(new javax.swing.JFrame(), true);
+                dialog.setVisible(true);
+            });
+            
+        } catch (Exception e) {
+            System.err.println("Error al iniciar la aplicación: " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 }
