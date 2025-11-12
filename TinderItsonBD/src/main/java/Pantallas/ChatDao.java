@@ -1,22 +1,37 @@
-
 package Pantallas;
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
  * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
  */
-
 /**
  *
  * @author manue
  */
-
-   
- import javax.swing.*;
+import com.mycompany.Service.IMensajeService;
+import com.mycompany.Service.MensajeService;
+import com.mycompany.Sockets.ClienteChat;
+import com.mycompany.entities.Estudiante;
+import com.mycompany.entities.Match;
+import com.mycompany.entities.Mensaje;
+import com.mycompany.util.SessionManager;
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Comparator;
 
 public class ChatDao extends JFrame {
+
+    private final IMensajeService mensajeService = new MensajeService();
+    private ClienteChat clienteChat;
+
+    private final Match match;
+    private final Estudiante estudianteLogueado;
+    private final Estudiante otroEstudiante;
+    private final DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
 
     private JPanel panelMensajes;
     private JScrollPane scrollPane;
@@ -24,85 +39,148 @@ public class ChatDao extends JFrame {
     private JButton btnEnviar;
 
     public ChatDao() {
-        setTitle("Chat");
+        this.match = match;
+        this.estudianteLogueado = SessionManager.getEstudianteLogueado();
+
+        if (this.estudianteLogueado == null) {
+            return;
+        }
+
+        this.otroEstudiante = match.getEstudiante1().getId().equals(estudianteLogueado.getId())
+                ? match.getEstudiante2()
+                : match.getEstudiante1();
+
+        setTitle("Chat con " + otroEstudiante.getNombre() + " (Tiempo Real)");
         setSize(400, 600);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setLocationRelativeTo(null);
         setLayout(new BorderLayout());
 
-        // Panel donde van las burbujas
         panelMensajes = new JPanel();
         panelMensajes.setLayout(new BoxLayout(panelMensajes, BoxLayout.Y_AXIS));
         panelMensajes.setBackground(Color.WHITE);
-
         scrollPane = new JScrollPane(panelMensajes);
-        scrollPane.setHorizontalScrollBarPolicy(ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         add(scrollPane, BorderLayout.CENTER);
 
-        // Panel inferior
-        JPanel panelInput = new JPanel(new BorderLayout());
+        JPanel panelInput = new JPanel(new BorderLayout(5, 5));
+        panelInput.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         campoTexto = new JTextField();
         btnEnviar = new JButton("Enviar");
-
         panelInput.add(campoTexto, BorderLayout.CENTER);
         panelInput.add(btnEnviar, BorderLayout.EAST);
-
         add(panelInput, BorderLayout.SOUTH);
 
-        // Eventos
-        btnEnviar.addActionListener(e -> enviarMensaje(true));
-        campoTexto.addActionListener(e -> enviarMensaje(true));
+        btnEnviar.addActionListener(e -> enviarMensaje());
+        campoTexto.addActionListener(e -> enviarMensaje());
 
-        setVisible(true);
+        cargarHistorial();
+
+        try {
+            clienteChat = new ClienteChat(this, estudianteLogueado.getId(), match.getId());
+            clienteChat.conectar();
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(this, "Error al conectar al servidor de chat. Asegúrate que ServidorChat.java está corriendo.", "Error de Conexión", JOptionPane.ERROR_MESSAGE);
+            btnEnviar.setEnabled(false);
+        }
+
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosing(java.awt.event.WindowEvent windowEvent) {
+                if (clienteChat != null) {
+                    clienteChat.desconectar();
+                }
+            }
+        });
+    }
+
+    private void cargarHistorial() {
+        try {
+            List<Mensaje> mensajes = mensajeService.buscarMensajesEntreEstudiantes(match.getEstudiante1(), match.getEstudiante2());
+            mensajes.sort(Comparator.comparing(Mensaje::getFechaHora));
+
+            for (Mensaje mensaje : mensajes) {
+                boolean esTuyo = mensaje.getEmisor().getId().equals(estudianteLogueado.getId());
+                agregarBurbuja(mensaje.getContenido(), esTuyo, mensaje.getFechaHora());
+            }
+
+            SwingUtilities.invokeLater(() -> {
+                JScrollBar sb = scrollPane.getVerticalScrollBar();
+                sb.setValue(sb.getMaximum());
+            });
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error al cargar historial: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     private void enviarMensaje(boolean esTuyo) {
         String texto = campoTexto.getText().trim();
-        if (texto.isEmpty()) return;
-
-        agregarBurbuja(texto, esTuyo);
-
-        campoTexto.setText("");
-
-        // Aquí simular un mensaje recibido
-        // después de 1 segundo
-        new Timer(1000, e -> {
-            agregarBurbuja("Mensaje recibido: " + texto, false);
-            ((Timer)e.getSource()).stop();
-        }).start();
-    }
-
-    private void agregarBurbuja(String mensaje, boolean esTuyo) {
-
-        JPanel burbuja = new JPanel();
-        burbuja.setLayout(new BorderLayout());
-        burbuja.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
-
-        JLabel labelMensaje = new JLabel("<html><body style='width: 200px'>" + mensaje + "</body></html>");
-        labelMensaje.setOpaque(true);
-        labelMensaje.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
-
-        if (esTuyo) {
-            // Mensaje derecho (verde)
-            labelMensaje.setBackground(new Color(185, 248, 180));
-            burbuja.add(labelMensaje, BorderLayout.EAST);
-        } else {
-            // Mensaje izquierdo (gris)
-            labelMensaje.setBackground(new Color(230, 230, 230));
-            burbuja.add(labelMensaje, BorderLayout.WEST);
+        if (texto.isEmpty() || clienteChat == null || !btnEnviar.isEnabled()) {
+            return;
         }
 
-        panelMensajes.add(burbuja);
-        panelMensajes.revalidate();
+        clienteChat.enviarMensaje(texto);
+        campoTexto.setText("");
+    }
 
-        // Baja automáticamente hasta el último mensaje
+    public void mostrarMensajeRecibido(String contenido, boolean esTuyo, LocalDateTime fechaHora) {
+        agregarBurbuja(contenido, esTuyo, fechaHora);
+
         SwingUtilities.invokeLater(() -> {
             JScrollBar sb = scrollPane.getVerticalScrollBar();
             sb.setValue(sb.getMaximum());
         });
     }
 
- 
+    private void agregarBurbuja(String mensaje, boolean esTuyo, LocalDateTime fechaHora) {
+
+        JPanel burbujaWrapper = new JPanel(new BorderLayout());
+        burbujaWrapper.setBackground(Color.WHITE);
+        burbujaWrapper.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
+
+        JPanel bubbleContent = new JPanel();
+        bubbleContent.setLayout(new BoxLayout(bubbleContent, BoxLayout.Y_AXIS));
+
+        JTextArea messageText = new JTextArea(mensaje);
+        messageText.setLineWrap(true);
+        messageText.setWrapStyleWord(true);
+        messageText.setEditable(false);
+        messageText.setFont(new Font("Segoe UI", Font.PLAIN, 13));
+        messageText.setMaximumSize(new Dimension(250, Short.MAX_VALUE));
+
+        JLabel timeLabel = new JLabel(fechaHora.format(timeFormatter));
+        timeLabel.setFont(new Font("Segoe UI", Font.PLAIN, 9));
+        timeLabel.setForeground(Color.DARK_GRAY);
+
+        if (esTuyo) {
+            messageText.setBackground(new Color(175, 238, 238));
+            bubbleContent.setBackground(new Color(175, 238, 238));
+
+            messageText.setBorder(BorderFactory.createEmptyBorder(6, 10, 6, 10));
+            timeLabel.setAlignmentX(Component.RIGHT_ALIGNMENT);
+            bubbleContent.setAlignmentX(Component.RIGHT_ALIGNMENT);
+
+            bubbleContent.add(messageText);
+            bubbleContent.add(timeLabel);
+
+            burbujaWrapper.add(bubbleContent, BorderLayout.EAST);
+        } else {
+            messageText.setBackground(new Color(230, 230, 230));
+            bubbleContent.setBackground(new Color(230, 230, 230));
+
+            messageText.setBorder(BorderFactory.createEmptyBorder(6, 10, 6, 10));
+            timeLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
+            bubbleContent.setAlignmentX(Component.LEFT_ALIGNMENT);
+
+            bubbleContent.add(messageText);
+            bubbleContent.add(timeLabel);
+
+            burbujaWrapper.add(bubbleContent, BorderLayout.WEST);
+        }
+
+        panelMensajes.add(burbujaWrapper);
+        panelMensajes.revalidate();
+        panelMensajes.repaint();
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.

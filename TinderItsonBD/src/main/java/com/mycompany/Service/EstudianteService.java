@@ -32,6 +32,9 @@ public class EstudianteService implements IEstudianteService {
         if (estudiante.getCarrera() == null) {
             throw new Exception("Carrera obligatoria");
         }
+        if (estudiante.getContrasena() == null || estudiante.getContrasena().isEmpty()) {
+            throw new Exception("Contraseña obligatoria");
+        }
         estudianteDAO.crear(estudiante);
     }
 
@@ -77,5 +80,18 @@ public class EstudianteService implements IEstudianteService {
     @Override
     public List<Estudiante> buscarPorGenero(String genero) {
         return estudianteDAO.buscarPorGenero(genero);
+    }
+
+    @Override
+    public Estudiante autenticarEstudiante(String correo, String contrasena) {
+        return estudianteDAO.buscarPorCredenciales(correo, contrasena);
+    }
+
+    @Override
+    public List<Estudiante> buscarPerfilesParaSwipe(Long estudianteId, int limit) {
+        if (limit > 100) {
+            limit = 100;
+        }
+        return estudianteDAO.buscarPerfilesDisponibles(estudianteId, limit);
     }
 }

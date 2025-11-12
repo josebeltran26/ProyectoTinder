@@ -29,4 +29,8 @@ public interface ILikeDAO {
     List<Like> buscarLikesRecibidosPorEstudiante(Estudiante estudiante);
 
     boolean existeLikeMutuo(Estudiante estudiante1, Estudiante estudiante2);
+
+    Like buscarLikePorEmisorYReceptor(Estudiante emisor, Estudiante receptor);
+
+    void eliminarLikePorEmisorYReceptor(Estudiante emisor, Estudiante receptor);
 }

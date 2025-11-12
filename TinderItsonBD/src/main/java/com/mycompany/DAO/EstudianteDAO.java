@@ -9,6 +9,7 @@ import com.mycompany.entities.Estudiante;
 import com.mycompany.util.JpaUtil;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityTransaction;
+import jakarta.persistence.NoResultException;
 import jakarta.persistence.TypedQuery;
 import java.util.List;
 
@@ -16,8 +17,8 @@ import java.util.List;
  *
  * @author Josel
  */
-public class EstudianteDAO implements IEstudianteDAO{
-   
+public class EstudianteDAO implements IEstudianteDAO {
+
     @Override
     public void crear(Estudiante estudiante) {
         EntityManager em = JpaUtil.getEntityManager();
@@ -27,7 +28,9 @@ public class EstudianteDAO implements IEstudianteDAO{
             em.persist(estudiante);
             tx.commit();
         } catch (Exception e) {
-            if (tx.isActive()) tx.rollback();
+            if (tx.isActive()) {
+                tx.rollback();
+            }
             throw e;
         } finally {
             em.close();
@@ -46,7 +49,9 @@ public class EstudianteDAO implements IEstudianteDAO{
 
     @Override
     public List<Estudiante> listar(int limit) {
-        if (limit > 100) limit = 100;
+        if (limit > 100) {
+            limit = 100;
+        }
         EntityManager em = JpaUtil.getEntityManager();
         try {
             TypedQuery<Estudiante> query = em.createQuery("SELECT e FROM Estudiante e", Estudiante.class);
@@ -66,7 +71,9 @@ public class EstudianteDAO implements IEstudianteDAO{
             em.merge(estudiante);
             tx.commit();
         } catch (Exception e) {
-            if (tx.isActive()) tx.rollback();
+            if (tx.isActive()) {
+                tx.rollback();
+            }
             throw e;
         } finally {
             em.close();
@@ -85,7 +92,9 @@ public class EstudianteDAO implements IEstudianteDAO{
             }
             tx.commit();
         } catch (Exception e) {
-            if (tx.isActive()) tx.rollback();
+            if (tx.isActive()) {
+                tx.rollback();
+            }
             throw e;
         } finally {
             em.close();
@@ -128,5 +137,38 @@ public class EstudianteDAO implements IEstudianteDAO{
             em.close();
         }
     }
-}
 
+    @Override
+    public Estudiante buscarPorCredenciales(String correo, String contrasena) {
+        EntityManager em = JpaUtil.getEntityManager();
+        try {
+            TypedQuery<Estudiante> query = em.createQuery(
+                    "SELECT e FROM Estudiante e JOIN e.correos c WHERE c.correo = :correo AND e.contrasena = :contrasena", Estudiante.class);
+            query.setParameter("correo", correo);
+            query.setParameter("contrasena", contrasena);
+            return query.getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        } finally {
+            em.close();
+        }
+    }
+
+    @Override
+    public List<Estudiante> buscarPerfilesDisponibles(Long estudianteId, int limit) {
+        EntityManager em = JpaUtil.getEntityManager();
+        try {
+            TypedQuery<Estudiante> query = em.createQuery(
+                    "SELECT e FROM Estudiante e "
+                    + "WHERE e.id != :estudianteId "
+                    + "AND e.id NOT IN ("
+                    + "SELECT l.receptor.id FROM Like l WHERE l.emisor.id = :estudianteId"
+                    + ")", Estudiante.class);
+            query.setParameter("estudianteId", estudianteId);
+            query.setMaxResults(limit);
+            return query.getResultList();
+        } finally {
+            em.close();
+        }
+    }
+}

@@ -27,4 +27,8 @@ public interface ILikeService {
     List<Like> buscarLikesDadosPorEstudiante(Estudiante estudiante);
 
     List<Like> buscarLikesRecibidosPorEstudiante(Estudiante estudiante);
+
+    Like buscarLikeDado(Estudiante emisor, Estudiante receptor);
+
+    void eliminarLikeDado(Estudiante emisor, Estudiante receptor) throws Exception;
 }

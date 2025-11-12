@@ -11,7 +11,7 @@ import com.mycompany.DAO.MatchDAO;
 import com.mycompany.entities.Estudiante;
 import com.mycompany.entities.Like;
 import com.mycompany.entities.Match;
-import java.time.LocalDateTime;
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -25,19 +25,17 @@ public class LikeService implements ILikeService {
 
     @Override
     public void crearLike(Like like) throws Exception {
-        if (like.getLikeD() == null || like.getLikeR() == null) {
+        if (like.getEmisor() == null || like.getReceptor() == null) {
             throw new Exception("Estudiantes obligatorios");
         }
-        if (like.getTipo() == null || like.getTipo().isEmpty()) {
-            throw new Exception("Tipo obligatorio");
-        }
+
         likeDAO.crear(like);
-        // Regla: Si hay like mutuo, crear match
-        if (likeDAO.existeLikeMutuo(like.getLikeD(), like.getLikeR()) && !matchDAO.existeMatch(like.getLikeD(), like.getLikeR())) {
+
+        if (likeDAO.existeLikeMutuo(like.getEmisor(), like.getReceptor()) && !matchDAO.existeMatch(like.getEmisor(), like.getReceptor())) {
             Match match = new Match();
-            match.setEstudiante1(like.getLikeD());
-            match.setEstudiante2(like.getLikeR());
-            match.setFechaHora(LocalDateTime.now());
+            match.setEstudiante1(like.getEmisor());
+            match.setEstudiante2(like.getReceptor());
+            match.setFechaHora(Calendar.getInstance());
             matchDAO.crear(match);
         }
     }
@@ -73,5 +71,25 @@ public class LikeService implements ILikeService {
     @Override
     public List<Like> buscarLikesRecibidosPorEstudiante(Estudiante estudiante) {
         return likeDAO.buscarLikesRecibidosPorEstudiante(estudiante);
+    }
+
+    @Override
+    public Like buscarLikeDado(Estudiante emisor, Estudiante receptor) {
+        return likeDAO.buscarLikePorEmisorYReceptor(emisor, receptor);
+    }
+
+    @Override
+    public void eliminarLikeDado(Estudiante emisor, Estudiante receptor) throws Exception {
+        if (emisor == null || receptor == null) {
+            throw new Exception("Emisor y receptor son obligatorios.");
+        }
+
+        boolean existiaMatch = matchDAO.existeMatch(emisor, receptor);
+
+        likeDAO.eliminarLikePorEmisorYReceptor(emisor, receptor);
+
+        if (existiaMatch) {
+            matchDAO.eliminarMatchPorEstudiantes(emisor, receptor);
+        }
     }
 }

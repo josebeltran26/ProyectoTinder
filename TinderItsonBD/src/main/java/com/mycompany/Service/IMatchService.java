@@ -25,4 +25,6 @@ public interface IMatchService {
     void eliminarMatch(Long id);
 
     List<Match> buscarMatchesPorEstudiante(Estudiante estudiante);
+
+    void eliminarMatchEntreEstudiantes(Estudiante e1, Estudiante e2);
 }

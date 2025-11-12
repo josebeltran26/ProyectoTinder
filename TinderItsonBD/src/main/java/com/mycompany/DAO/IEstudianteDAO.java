@@ -29,4 +29,8 @@ public interface IEstudianteDAO {
     List<Estudiante> buscarPorEdadRango(int minEdad, int maxEdad);
 
     List<Estudiante> buscarPorGenero(String genero);
+
+    Estudiante buscarPorCredenciales(String correo, String contrasena);
+
+    List<Estudiante> buscarPerfilesDisponibles(Long estudianteId, int limit);
 }

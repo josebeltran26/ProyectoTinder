@@ -27,4 +27,6 @@ public interface IMatchDAO {
     List<Match> buscarMatchesPorEstudiante(Estudiante estudiante);
 
     boolean existeMatch(Estudiante estudiante1, Estudiante estudiante2);
+
+    void eliminarMatchPorEstudiantes(Estudiante e1, Estudiante e2);
 }

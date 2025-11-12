@@ -16,8 +16,6 @@ import java.util.List;
  *
  * @author Josel
  */
-
-
 public class MatchDAO implements IMatchDAO {
 
     @Override
@@ -29,7 +27,9 @@ public class MatchDAO implements IMatchDAO {
             em.persist(match);
             tx.commit();
         } catch (Exception e) {
-            if (tx.isActive()) tx.rollback();
+            if (tx.isActive()) {
+                tx.rollback();
+            }
             throw e;
         } finally {
             em.close();
@@ -48,7 +48,9 @@ public class MatchDAO implements IMatchDAO {
 
     @Override
     public List<Match> listar(int limit) {
-        if (limit > 100) limit = 100;
+        if (limit > 100) {
+            limit = 100;
+        }
         EntityManager em = JpaUtil.getEntityManager();
         try {
             TypedQuery<Match> query = em.createQuery("SELECT m FROM Match m", Match.class);
@@ -68,7 +70,9 @@ public class MatchDAO implements IMatchDAO {
             em.merge(match);
             tx.commit();
         } catch (Exception e) {
-            if (tx.isActive()) tx.rollback();
+            if (tx.isActive()) {
+                tx.rollback();
+            }
             throw e;
         } finally {
             em.close();
@@ -87,7 +91,9 @@ public class MatchDAO implements IMatchDAO {
             }
             tx.commit();
         } catch (Exception e) {
-            if (tx.isActive()) tx.rollback();
+            if (tx.isActive()) {
+                tx.rollback();
+            }
             throw e;
         } finally {
             em.close();
@@ -99,7 +105,7 @@ public class MatchDAO implements IMatchDAO {
         EntityManager em = JpaUtil.getEntityManager();
         try {
             TypedQuery<Match> query = em.createQuery(
-                "SELECT m FROM Match m WHERE m.estudiante1 = :estudiante OR m.estudiante2 = :estudiante", Match.class);
+                    "SELECT m FROM Match m WHERE m.estudiante1 = :estudiante OR m.estudiante2 = :estudiante", Match.class);
             query.setParameter("estudiante", estudiante);
             return query.getResultList();
         } finally {
@@ -112,7 +118,7 @@ public class MatchDAO implements IMatchDAO {
         EntityManager em = JpaUtil.getEntityManager();
         try {
             TypedQuery<Long> query = em.createQuery(
-                "SELECT COUNT(m) FROM Match m WHERE (m.estudiante1 = :e1 AND m.estudiante2 = :e2) OR (m.estudiante1 = :e2 AND m.estudiante2 = :e1)", Long.class);
+                    "SELECT COUNT(m) FROM Match m WHERE (m.estudiante1 = :e1 AND m.estudiante2 = :e2) OR (m.estudiante1 = :e2 AND m.estudiante2 = :e1)", Long.class);
             query.setParameter("e1", estudiante1);
             query.setParameter("e2", estudiante2);
             return query.getSingleResult() > 0;
@@ -120,4 +126,33 @@ public class MatchDAO implements IMatchDAO {
             em.close();
         }
     }
+
+    @Override
+    public void eliminarMatchPorEstudiantes(Estudiante e1, Estudiante e2) {
+        EntityManager em = JpaUtil.getEntityManager();
+        EntityTransaction tx = em.getTransaction();
+        try {
+            tx.begin();
+            TypedQuery<Match> query = em.createQuery(
+                    "SELECT m FROM Match m WHERE (m.estudiante1 = :e1 AND m.estudiante2 = :e2) OR (m.estudiante1 = :e2 AND m.estudiante2 = :e1)", Match.class);
+            query.setParameter("e1", e1);
+            query.setParameter("e2", e2);
+
+            List<Match> matches = query.getResultList();
+
+            for (Match match : matches) {
+                em.remove(match);
+            }
+
+            tx.commit();
+        } catch (Exception e) {
+            if (tx.isActive()) {
+                tx.rollback();
+            }
+            throw e;
+        } finally {
+            em.close();
+        }
+    }
+
 }

@@ -29,4 +29,8 @@ public interface IEstudianteService {
     List<Estudiante> buscarPorEdadRango(int minEdad, int maxEdad);
 
     List<Estudiante> buscarPorGenero(String genero);
+
+    Estudiante autenticarEstudiante(String correo, String contrasena);
+
+    List<Estudiante> buscarPerfilesParaSwipe(Long estudianteId, int limit);
 }

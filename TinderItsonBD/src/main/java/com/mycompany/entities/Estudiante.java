@@ -40,6 +40,8 @@ public class Estudiante implements Serializable {
     private Carrera carrera;
     @Column(name = "foto_usuario_url", length = 500)
     private String fotoUsuarioUrl;
+    @Column(name = "contrasena")
+    private String contrasena;
     @OneToMany(mappedBy = "estudiante", cascade = CascadeType.ALL)
     private List<Correo> correos;
     @OneToMany(mappedBy = "estudiante", cascade = CascadeType.ALL)
@@ -124,6 +126,14 @@ public class Estudiante implements Serializable {
         this.fotoUsuarioUrl = fotoUsuarioUrl;
     }
 
+    public String getContrasena() {
+        return contrasena;
+    }
+
+    public void setContrasena(String contrasena) {
+        this.contrasena = contrasena;
+    }
+
     public List<Correo> getCorreos() {
         return correos;
     }
@@ -190,7 +200,6 @@ public class Estudiante implements Serializable {
 
     @Override
     public String toString() {
-        return "com.mycompany.tinderitsonbd.entities.Estudiante[ id=" + id + " ]";
+        return "Estudiante[ id=" + id + " ]";
     }
-
 }

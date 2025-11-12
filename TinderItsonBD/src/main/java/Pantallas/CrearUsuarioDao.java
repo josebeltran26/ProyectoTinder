@@ -21,8 +21,10 @@ import com.mycompany.entities.Hobbie;
 import java.awt.Color;
 import java.awt.Image;
 import java.io.File;
+import java.util.List;
 import javax.swing.ImageIcon;
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
 /**
@@ -35,6 +37,7 @@ public class CrearUsuarioDao extends javax.swing.JFrame {
     private final ICorreoService correoService;
     private final IHobbieService hobbieService;
     private final IEstudianteHobbieService estudianteHobbieService;
+    private String fotoPath = null;
 
     private void addPlaceholder(JTextField campo, String texto) {
         campo.setText(texto);
@@ -264,10 +267,79 @@ public class CrearUsuarioDao extends javax.swing.JFrame {
     }//GEN-LAST:event_TextConfirmarActionPerformed
 
     private void ButtonCrearCuentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ButtonCrearCuentaActionPerformed
-        // TODO add your handling code here:
-        IniciarSesionDao a = new IniciarSesionDao();
-        a.setVisible(true);
-        this.dispose();
+        try {
+            String nombre = TextNombre.getText().trim();
+            String apellido = TextApellido.getText().trim();
+            String correoStr = TextCorreo.getText().trim();
+            String contrasena = TextContrasena.getText().trim();
+            String confirmar = TextConfirmar.getText().trim();
+            String carreraStr = TextCarrera.getText().trim().toUpperCase().replace(" ", "_");
+            String hobbiesStr = TextHobbies.getText().trim() + "," + TextIntereses.getText().trim(); // Combina Hobbies e Intereses
+
+            if (!contrasena.equals(confirmar)) {
+                JOptionPane.showMessageDialog(this, "Las contraseñas no coinciden.", "Error de Contraseña", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            Carrera carrera = Carrera.valueOf(carreraStr);
+
+            int edad = 18; 
+            String genero = "Otro";
+
+            Estudiante nuevoEstudiante = new Estudiante();
+            nuevoEstudiante.setNombre(nombre + " " + apellido);
+            nuevoEstudiante.setContrasena(contrasena);
+            nuevoEstudiante.setCarrera(carrera);
+            nuevoEstudiante.setEdad(edad);
+            nuevoEstudiante.setGenero(genero);
+            nuevoEstudiante.setFotoUsuarioUrl(fotoPath);
+
+            estudianteService.crearEstudiante(nuevoEstudiante);
+
+            Correo nuevoCorreo = new Correo();
+            nuevoCorreo.setCorreo(correoStr);
+            nuevoCorreo.setEstudiante(nuevoEstudiante);
+            correoService.crearCorreo(nuevoCorreo);
+
+            String[] hobbiesArray = hobbiesStr.split(",");
+            for (String hobbieNombreCompleto : hobbiesArray) {
+                String hobbieNombre = hobbieNombreCompleto.trim();
+
+                if (hobbieNombre.isEmpty() || hobbieNombre.equalsIgnoreCase("Ingresa Tus Hobbies...") || hobbieNombre.equalsIgnoreCase("Ingresa Tus Intereses...")) {
+                    continue; 
+                }
+
+                List<Hobbie> hobbiesEncontrados = hobbieService.buscarPorNombre(hobbieNombre);
+                Hobbie hobbie;
+
+                if (hobbiesEncontrados.isEmpty()) {
+                    hobbie = new Hobbie();
+                    hobbie.setNombre(hobbieNombre);
+                    hobbieService.crearHobbie(hobbie);
+                } else {
+                    hobbie = hobbiesEncontrados.get(0);
+                }
+
+                EstudianteHobbie eh = new EstudianteHobbie();
+                eh.setEstudiante(nuevoEstudiante);
+                eh.setHobbie(hobbie);
+
+                estudianteHobbieService.crearEstudianteHobbie(eh);
+            }
+
+            JOptionPane.showMessageDialog(this, "Cuenta creada exitosamente. Ahora inicia sesión.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+
+            IniciarSesionDao a = new IniciarSesionDao();
+            a.setVisible(true);
+            this.dispose();
+
+        } catch (IllegalArgumentException e) {
+            JOptionPane.showMessageDialog(this, "La carrera ingresada no es válida.", "Error de Carrera", JOptionPane.ERROR_MESSAGE);
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error al crear la cuenta: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
+        }
+
     }//GEN-LAST:event_ButtonCrearCuentaActionPerformed
 
     /**

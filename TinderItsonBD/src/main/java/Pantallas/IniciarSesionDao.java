@@ -4,7 +4,13 @@
  */
 package Pantallas;
 
+import Pantallas.PerfilesDao;
+import com.mycompany.Service.EstudianteService;
+import com.mycompany.Service.IEstudianteService;
+import com.mycompany.entities.Estudiante;
+import com.mycompany.util.SessionManager;
 import java.awt.Color;
+import javax.swing.JOptionPane;
 import javax.swing.JTextField;
 
 /**
@@ -12,35 +18,39 @@ import javax.swing.JTextField;
  * @author manue
  */
 public class IniciarSesionDao extends javax.swing.JFrame {
-private void addPlaceholder(JTextField campo, String texto) {
-    campo.setText(texto);
-    campo.setForeground(Color.GRAY);
 
-    campo.addFocusListener(new java.awt.event.FocusAdapter() {
-        @Override
-        public void focusGained(java.awt.event.FocusEvent e) {
-            if (campo.getText().equals(texto)) {
-                campo.setText("");
-                campo.setForeground(Color.BLACK);
-            }
-        }
+    private final IEstudianteService estudianteService = new EstudianteService();
 
-        @Override
-        public void focusLost(java.awt.event.FocusEvent e) {
-            if (campo.getText().isEmpty()) {
-                campo.setText(texto);
-                campo.setForeground(Color.GRAY);
+    private void addPlaceholder(JTextField campo, String texto) {
+        campo.setText(texto);
+        campo.setForeground(Color.GRAY);
+
+        campo.addFocusListener(new java.awt.event.FocusAdapter() {
+            @Override
+            public void focusGained(java.awt.event.FocusEvent e) {
+                if (campo.getText().equals(texto)) {
+                    campo.setText("");
+                    campo.setForeground(Color.BLACK);
+                }
             }
-        }
-    });
-}
+
+            @Override
+            public void focusLost(java.awt.event.FocusEvent e) {
+                if (campo.getText().isEmpty()) {
+                    campo.setText(texto);
+                    campo.setForeground(Color.GRAY);
+                }
+            }
+        });
+    }
+
     /**
      * Creates new form IniciarSesionDao
      */
     public IniciarSesionDao() {
         initComponents();
         addPlaceholder(TextCorreo, "Correo...");
-addPlaceholder(TextContrasena, "Contraseña...");
+        addPlaceholder(TextContrasena, "Contraseña...");
     }
 
     /**
@@ -142,16 +152,36 @@ addPlaceholder(TextContrasena, "Contraseña...");
     }// </editor-fold>//GEN-END:initComponents
 
     private void BtnContinuarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnContinuarActionPerformed
-        // TODO add your handling code here:
-        ChatDao a = new ChatDao();
-        a.setVisible(true);
-        this.dispose();
+        String correo = TextCorreo.getText().trim();
+        String contrasena = TextContrasena.getText().trim();
+
+        if (correo.isEmpty() || correo.equals("Correo...") || contrasena.isEmpty() || contrasena.equals("Contraseña...")) {
+            JOptionPane.showMessageDialog(this, "Ingresa tu correo y contraseña.", "Error de Validación", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        try {
+            Estudiante estudianteLogueado = estudianteService.autenticarEstudiante(correo, contrasena);
+
+            if (estudianteLogueado != null) {
+                SessionManager.setEstudianteLogueado(estudianteLogueado);
+
+                PerfilesDao a = new PerfilesDao();
+                a.setVisible(true);
+                this.dispose();
+            } else {
+                JOptionPane.showMessageDialog(this, "Credenciales incorrectas o usuario no encontrado.", "Error de Login", JOptionPane.ERROR_MESSAGE);
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(this, "Error de autenticación: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+            e.printStackTrace();
+        }
+
     }//GEN-LAST:event_BtnContinuarActionPerformed
 
     /**
      * @param args the command line arguments
      */
-
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton BtnContinuar;

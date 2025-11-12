@@ -11,18 +11,17 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
 import jakarta.persistence.TemporalType;
 import java.io.Serializable;
 import java.util.Calendar;
+import java.util.Objects;
 
 /**
  *
  * @author Josel
  */
 @Entity
-@Table(name = "Estudiante_like")
 public class Like implements Serializable {
 
     @Id
@@ -32,6 +31,7 @@ public class Like implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "fecha_hora", nullable = false)
     private Calendar fechaHora;
+
     @ManyToOne
     @JoinColumn(name = "emisor_id", nullable = false)
     private Estudiante emisor;
@@ -41,7 +41,7 @@ public class Like implements Serializable {
     private Estudiante receptor;
 
     public Like() {
-        this.fechaHora = Calendar.getInstance(); 
+        this.fechaHora = Calendar.getInstance();
     }
 
     public Long getId() {
@@ -50,14 +50,6 @@ public class Like implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public Calendar getFechaHora() {
-        return fechaHora;
-    }
-
-    public void setFechaHora(Calendar fechaHora) {
-        this.fechaHora = fechaHora;
     }
 
     public Estudiante getEmisor() {
@@ -76,9 +68,28 @@ public class Like implements Serializable {
         this.receptor = receptor;
     }
 
-    @Override
-    public String toString() {
-        return "com.mycompany.tinderitsonbd.entities.Like[ id=" + id + " ]";
+    public Calendar getFechaHora() {
+        return fechaHora;
     }
 
+    public void setFechaHora(Calendar fechaHora) {
+        this.fechaHora = fechaHora;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null || getClass() != obj.getClass()) {
+            return false;
+        }
+        Like like = (Like) obj;
+        return Objects.equals(id, like.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
 }

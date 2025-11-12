@@ -9,6 +9,7 @@ import com.mycompany.DAO.MatchDAO;
 import com.mycompany.entities.Estudiante;
 import com.mycompany.entities.Match;
 import java.time.LocalDateTime;
+import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -24,9 +25,11 @@ public class MatchService implements IMatchService {
         if (match.getEstudiante1() == null || match.getEstudiante2() == null) {
             throw new Exception("Estudiantes obligatorios");
         }
-        if (match.getFechaHora() != null && match.getFechaHora().isAfter(LocalDateTime.now())) {
-            throw new Exception("Fecha no puede ser futura");
+
+        if (match.getFechaHora() == null) {
+            match.setFechaHora(Calendar.getInstance());
         }
+
         matchDAO.crear(match);
     }
 
@@ -56,5 +59,10 @@ public class MatchService implements IMatchService {
     @Override
     public List<Match> buscarMatchesPorEstudiante(Estudiante estudiante) {
         return matchDAO.buscarMatchesPorEstudiante(estudiante);
+    }
+
+    @Override
+    public void eliminarMatchEntreEstudiantes(Estudiante e1, Estudiante e2) {
+        matchDAO.eliminarMatchPorEstudiantes(e1, e2);
     }
 }
