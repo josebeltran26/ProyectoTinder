@@ -15,7 +15,6 @@ import javax.swing.SwingUtilities;
  *
  * @author Josel
  */
-
 public class ClienteChat {
 
     private static final String SERVER_IP = "127.0.0.1";
@@ -55,13 +54,15 @@ public class ClienteChat {
                 socket.close();
             }
         } catch (IOException e) {
-        }
+            }
     }
 
     private void escucharMensajes(BufferedReader in) {
         try {
             String mensajeRecibido;
             while ((mensajeRecibido = in.readLine()) != null) {
+                String[] partes = mensajeRecibido.split(":", 2);
+
                 if (partes.length == 2) {
                     Long idEmisor = Long.parseLong(partes[0]);
                     String contenido = partes[1];

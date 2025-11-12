@@ -17,9 +17,8 @@ import java.util.List;
  *
  * @author Josel
  */
-
-
 public class MensajeService implements IMensajeService {
+
     private IMensajeDAO mensajeDAO = new MensajeDAO();
     private IMatchDAO matchDAO = new MatchDAO();
 
@@ -28,7 +27,7 @@ public class MensajeService implements IMensajeService {
         if (mensaje.getContenido() == null || mensaje.getContenido().isEmpty()) {
             throw new Exception("Contenido obligatorio");
         }
-        if (mensaje.getContenido()== null) {
+        if (mensaje.getContenido() == null) {
             throw new Exception("Estudiante obligatorio");
         }
         if (mensaje.getFechaHora() != null && mensaje.getFechaHora().isAfter(LocalDateTime.now())) {
@@ -44,7 +43,9 @@ public class MensajeService implements IMensajeService {
 
     @Override
     public List<Mensaje> listarMensajes(int limit) {
-        if (limit > 100) limit = 100;
+        if (limit > 100) {
+            limit = 100;
+        }
         return mensajeDAO.listar(limit);
     }
 

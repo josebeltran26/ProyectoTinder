@@ -14,7 +14,6 @@ import java.io.*;
 import java.net.*;
 import java.time.LocalDateTime;
 import java.util.HashMap;
-import java.util.List;
 
 import java.util.Map;
 
@@ -22,7 +21,6 @@ import java.util.Map;
  *
  * @author Josel
  */
-
 public class ServidorChat {
 
     private static final int PUERTO = 9090;
@@ -96,9 +94,8 @@ public class ServidorChat {
                 try {
                     socket.close();
                 } catch (IOException e) {
-                System.out.println("Conexión cerrada para Estudiante ID " + estudianteId);
+                    }
             }
-        }
         }
 
         private void guardarMensaje(String contenido) {
