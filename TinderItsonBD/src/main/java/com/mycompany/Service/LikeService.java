@@ -11,7 +11,7 @@ import com.mycompany.DAO.MatchDAO;
 import com.mycompany.entities.Estudiante;
 import com.mycompany.entities.Like;
 import com.mycompany.entities.Match;
-import java.util.Calendar;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -35,7 +35,7 @@ public class LikeService implements ILikeService {
             Match match = new Match();
             match.setEstudiante1(like.getEmisor());
             match.setEstudiante2(like.getReceptor());
-            match.setFechaHora(Calendar.getInstance());
+            match.setFechaHora(LocalDateTime.now());
             matchDAO.crear(match);
         }
     }

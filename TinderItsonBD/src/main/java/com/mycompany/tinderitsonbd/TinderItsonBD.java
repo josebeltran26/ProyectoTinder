@@ -5,6 +5,9 @@ package com.mycompany.tinderitsonbd;
 
 import Pantallas.InicioDao;
 import com.mycompany.util.JpaUtil;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.Persistence;
 
 /**
  *
@@ -13,15 +16,18 @@ import com.mycompany.util.JpaUtil;
 public class TinderItsonBD {
 
     public static void main(String[] args) {
-        try {
-            javax.swing.SwingUtilities.invokeLater(() -> {
-                InicioDao dialog = new InicioDao(new javax.swing.JFrame(), true);
-                dialog.setVisible(true);
-            });
-            
-        } catch (Exception e) {
-            System.err.println("Error al iniciar la aplicación: " + e.getMessage());
-            e.printStackTrace();
-        }
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("");
+        EntityManager em = emf.createEntityManager();
     }
-}
+//        try {
+//            javax.swing.SwingUtilities.invokeLater(() -> {
+//                InicioDao dialog = new InicioDao(new javax.swing.JFrame(), true);
+//                dialog.setVisible(true);
+//            });
+//            
+//        } catch (Exception e) {
+//            System.err.println("Error al iniciar la aplicación: " + e.getMessage());
+//            e.printStackTrace();
+//        }
+//    }
+    }

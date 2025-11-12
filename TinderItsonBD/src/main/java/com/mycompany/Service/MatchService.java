@@ -9,7 +9,6 @@ import com.mycompany.DAO.MatchDAO;
 import com.mycompany.entities.Estudiante;
 import com.mycompany.entities.Match;
 import java.time.LocalDateTime;
-import java.util.Calendar;
 import java.util.List;
 
 /**
@@ -27,7 +26,8 @@ public class MatchService implements IMatchService {
         }
 
         if (match.getFechaHora() == null) {
-            match.setFechaHora(Calendar.getInstance());
+            // Se asume que el cambio de Calendar a LocalDateTime se ha aplicado
+            match.setFechaHora(LocalDateTime.now());
         }
 
         matchDAO.crear(match);
@@ -64,5 +64,10 @@ public class MatchService implements IMatchService {
     @Override
     public void eliminarMatchEntreEstudiantes(Estudiante e1, Estudiante e2) {
         matchDAO.eliminarMatchPorEstudiantes(e1, e2);
+    }
+
+    @Override
+    public boolean existeMatch(Estudiante estudiante1, Estudiante estudiante2) {
+        return matchDAO.existeMatch(estudiante1, estudiante2);
     }
 }

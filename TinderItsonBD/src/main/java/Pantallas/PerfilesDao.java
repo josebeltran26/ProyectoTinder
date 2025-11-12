@@ -349,9 +349,7 @@ public class PerfilesDao extends javax.swing.JFrame {
     /**
      * @param args the command line arguments
      */
-    private void siguientePerfil() {
-
-    }
+    
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JLabel Hobbies;

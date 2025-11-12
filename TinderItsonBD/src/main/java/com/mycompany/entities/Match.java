@@ -13,10 +13,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
 import java.io.Serializable;
-import java.util.Calendar;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /**
@@ -25,13 +23,13 @@ import java.util.List;
  */
 @Entity
 public class Match implements Serializable {
-@Id
+
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "fecha_hora", nullable = false)
-    private Calendar fechaHora;
+    private LocalDateTime fechaHora; //
 
     @ManyToOne
     @JoinColumn(name = "estudiante1_id", nullable = false)
@@ -40,14 +38,13 @@ public class Match implements Serializable {
     @ManyToOne
     @JoinColumn(name = "estudiante2_id", nullable = false)
     private Estudiante estudiante2;
-    
+
     @OneToMany(mappedBy = "match", cascade = CascadeType.ALL)
     private List<Mensaje> mensajes;
 
     public Match() {
-        this.fechaHora = Calendar.getInstance();
+        this.fechaHora = LocalDateTime.now();
     }
-
 
     public Long getId() {
         return id;
@@ -57,11 +54,11 @@ public class Match implements Serializable {
         this.id = id;
     }
 
-    public Calendar getFechaHora() {
+    public LocalDateTime getFechaHora() {
         return fechaHora;
     }
 
-    public void setFechaHora(Calendar fechaHora) {
+    public void setFechaHora(LocalDateTime fechaHora) {
         this.fechaHora = fechaHora;
     }
 
@@ -89,10 +86,9 @@ public class Match implements Serializable {
         this.mensajes = mensajes;
     }
 
-  
     @Override
     public String toString() {
         return "com.mycompany.tinderitsonbd.entities.Match[ id=" + id + " ]";
     }
-    
+
 }

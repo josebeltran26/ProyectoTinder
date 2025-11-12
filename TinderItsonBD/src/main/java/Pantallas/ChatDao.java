@@ -19,7 +19,6 @@ import java.util.Comparator;
  *
  * @author manue
  */
-
 public class ChatDao extends JFrame {
 
     private final MensajeService mensajeService = new MensajeService();
@@ -27,7 +26,7 @@ public class ChatDao extends JFrame {
 
     private final Match match;
     private final Estudiante estudianteLogueado;
-    private final Estudiante otroEstudiante;
+    private Estudiante otroEstudiante = null;
     private final DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm");
 
     private JPanel panelMensajes;
@@ -40,6 +39,7 @@ public class ChatDao extends JFrame {
         this.estudianteLogueado = SessionManager.getEstudianteLogueado();
 
         if (this.estudianteLogueado == null) {
+            JOptionPane.showMessageDialog(this, "Sesión no iniciada.", "Error", JOptionPane.ERROR_MESSAGE);
             return;
         }
 
@@ -92,8 +92,10 @@ public class ChatDao extends JFrame {
 
     private void cargarHistorial() {
         try {
-            List<Mensaje> mensajes = mensajeService.buscarMensajesEntreEstudiantes(match.getEstudiante1(), match.getEstudiante2());
+            List<Mensaje> mensajes = mensajeService.buscarMensajesEntreEstudiantes(estudianteLogueado, otroEstudiante);
             mensajes.sort(Comparator.comparing(Mensaje::getFechaHora));
+
+            panelMensajes.removeAll();
 
             for (Mensaje mensaje : mensajes) {
                 boolean esTuyo = mensaje.getEmisor().getId().equals(estudianteLogueado.getId());
@@ -102,19 +104,18 @@ public class ChatDao extends JFrame {
 
             SwingUtilities.invokeLater(() -> {
                 JScrollBar sb = scrollPane.getVerticalScrollBar();
-                sb.setValue(sb.getMaximum());
+                sb.setValue(sb.getMaximum()); // Scrollear al final
             });
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this, "Error al cargar historial: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
         }
     }
 
-    private void enviarMensaje(boolean esTuyo) {
+    private void enviarMensaje() {
         String texto = campoTexto.getText().trim();
         if (texto.isEmpty() || clienteChat == null || !btnEnviar.isEnabled()) {
             return;
         }
-
         clienteChat.enviarMensaje(texto);
         campoTexto.setText("");
     }
@@ -203,7 +204,7 @@ public class ChatDao extends JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
-  
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     // End of variables declaration//GEN-END:variables
 }
