@@ -23,8 +23,8 @@ import java.util.List;
  */
 public class LikeService implements ILikeService {
 
-    private ILikeDAO likeDAO = new LikeDAO();
-    private IMatchDAO matchDAO = new MatchDAO();
+    private LikeDAO likeDAO = new LikeDAO();
+    private MatchDAO matchDAO = new MatchDAO();
 
     @Override
     public void crearLike(Like like) throws Exception {
@@ -37,14 +37,16 @@ public class LikeService implements ILikeService {
         try {
             tx.begin();
 
-            ((LikeDAO) likeDAO).crearConEm(like, em);
+            likeDAO.crearConEm(like, em);
 
-            if (likeDAO.existeLikeMutuo(like.getEmisor(), like.getReceptor()) && !matchDAO.existeMatch(like.getEmisor(), like.getReceptor())) {
+            boolean esMatchMutuo = likeDAO.existeLikeMutuoConEm(like.getEmisor(), like.getReceptor(), em);
+
+            if (esMatchMutuo && !matchDAO.existeMatch(like.getEmisor(), like.getReceptor())) {
                 Match match = new Match();
                 match.setEstudiante1(like.getEmisor());
                 match.setEstudiante2(like.getReceptor());
                 match.setFechaHora(LocalDateTime.now());
-                ((MatchDAO) matchDAO).crearConEm(match, em);
+                matchDAO.crearConEm(match, em);
             }
 
             tx.commit();

@@ -129,9 +129,7 @@ public class LikeDAO implements ILikeDAO {
         }
     }
 
-    @Override
-    public boolean existeLikeMutuo(Estudiante estudiante1, Estudiante estudiante2) {
-        EntityManager em = JpaUtil.getEntityManager();
+    public boolean existeLikeMutuoConEm(Estudiante estudiante1, Estudiante estudiante2, EntityManager em) {
         try {
             TypedQuery<Long> query = em.createQuery(
                     "SELECT COUNT(l) FROM Like l WHERE "
@@ -139,6 +137,16 @@ public class LikeDAO implements ILikeDAO {
             query.setParameter("e1", estudiante1);
             query.setParameter("e2", estudiante2);
             return query.getSingleResult() >= 2;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    @Override
+    public boolean existeLikeMutuo(Estudiante estudiante1, Estudiante estudiante2) {
+        EntityManager em = JpaUtil.getEntityManager();
+        try {
+            return existeLikeMutuoConEm(estudiante1, estudiante2, em);
         } finally {
             em.close();
         }
@@ -166,9 +174,14 @@ public class LikeDAO implements ILikeDAO {
         EntityTransaction tx = em.getTransaction();
         try {
             tx.begin();
-            Like like = buscarLikePorEmisorYReceptor(emisor, receptor);
-            if (like != null) {
-                em.remove(em.contains(like) ? like : em.merge(like));
+            TypedQuery<Like> query = em.createQuery(
+                    "SELECT l FROM Like l WHERE l.emisor = :emisor AND l.receptor = :receptor", Like.class);
+            query.setParameter("emisor", emisor);
+            query.setParameter("receptor", receptor);
+
+            List<Like> likes = query.getResultList();
+            if (!likes.isEmpty()) {
+                em.remove(likes.get(0)); 
             }
             tx.commit();
         } catch (Exception e) {

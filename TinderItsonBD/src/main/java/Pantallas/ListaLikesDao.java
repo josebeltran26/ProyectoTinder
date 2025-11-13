@@ -12,6 +12,7 @@ import com.mycompany.entities.Estudiante;
 import com.mycompany.entities.Like;
 import com.mycompany.entities.Match;
 import com.mycompany.util.SessionManager;
+import java.awt.BorderLayout;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -42,6 +43,7 @@ public class ListaLikesDao extends javax.swing.JFrame {
 
     public ListaLikesDao() {
         initComponents();
+
         this.estudianteLogueado = SessionManager.getEstudianteLogueado();
         if (this.estudianteLogueado == null) {
             new IniciarSesionDao().setVisible(true);
@@ -49,6 +51,35 @@ public class ListaLikesDao extends javax.swing.JFrame {
             return;
         }
         cargarLikes();
+    }
+
+    private void initComponents() {
+        jPanel1 = new JPanel();
+        lblTitulo = new JLabel("Tus Likes y Matches");
+        ListaLikes = new JList<>();
+        jScrollPane1 = new JScrollPane(ListaLikes);
+        btnVolverPerfiles = new JButton("<- Volver a Perfiles");
+
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setTitle("Lista de Likes y Matches");
+        setSize(400, 500);
+        setLocationRelativeTo(null); 
+
+        jPanel1.setLayout(new BorderLayout(10, 10));
+        jPanel1.setBorder(javax.swing.BorderFactory.createEmptyBorder(10, 10, 10, 10));
+        jPanel1.add(lblTitulo, BorderLayout.NORTH);
+        jPanel1.add(jScrollPane1, BorderLayout.CENTER);
+        jPanel1.add(btnVolverPerfiles, BorderLayout.SOUTH);
+
+        btnVolverPerfiles.addActionListener(this::btnVolverPerfilesActionPerformed);
+        ListaLikes.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent evt) {
+                ListaLikesMouseClicked(evt);
+            }
+        });
+
+        getContentPane().add(jPanel1);
     }
 
     private void cargarLikes() {
@@ -79,7 +110,7 @@ public class ListaLikesDao extends javax.swing.JFrame {
 
     private void ListaLikesMouseClicked(java.awt.event.MouseEvent evt) {
         int index = ListaLikes.getSelectedIndex();
-        if (index >= 0 && !likesDados.isEmpty() && evt.getClickCount() == 2) {
+        if (index >= 0 && likesDados != null && !likesDados.isEmpty() && evt.getClickCount() == 2) {
             Estudiante perfilSeleccionado = perfilesLikeadosMap.get(index);
 
             try {
@@ -105,9 +136,5 @@ public class ListaLikesDao extends javax.swing.JFrame {
     private void btnVolverPerfilesActionPerformed(java.awt.event.ActionEvent evt) {
         new PerfilesDao().setVisible(true);
         this.dispose();
-    }
-
-    @SuppressWarnings("unchecked")
-    private void initComponents() {
     }
 }

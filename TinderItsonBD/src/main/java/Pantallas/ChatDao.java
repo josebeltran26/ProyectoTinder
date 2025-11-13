@@ -74,13 +74,17 @@ public class ChatDao extends JFrame {
 
         cargarHistorial();
 
-        try {
-            clienteChat = new ClienteChat(this, estudianteLogueado.getId(), match.getId());
-            clienteChat.conectar();
-        } catch (IOException e) {
-            JOptionPane.showMessageDialog(this, "Error al conectar al servidor de chat. Asegúrate que ServidorChat.java está corriendo.", "Error de Conexión", JOptionPane.ERROR_MESSAGE);
-            btnEnviar.setEnabled(false);
-        }
+        new Thread(() -> {
+            try {
+                clienteChat = new ClienteChat(this, estudianteLogueado.getId(), match.getId());
+                clienteChat.conectar();
+            } catch (IOException e) {
+                SwingUtilities.invokeLater(() -> {
+                    JOptionPane.showMessageDialog(this, "Error al conectar al servidor de chat. Asegúrate que ServidorChat.java está corriendo.", "Error de Conexión", JOptionPane.ERROR_MESSAGE);
+                    btnEnviar.setEnabled(false);
+                });
+            }
+        }).start();
 
         addWindowListener(new java.awt.event.WindowAdapter() {
             @Override

@@ -39,6 +39,16 @@ public class CrearUsuarioDao extends javax.swing.JFrame {
     private final IEstudianteHobbieService estudianteHobbieService;
     private String fotoPath = null;
 
+    private static final String PH_CORREO = "Correo...";
+    private static final String PH_CONTRASENA = "Contraseña...";
+    private static final String PH_CONFIRMAR = "Confirma La Contraseña...";
+    private static final String PH_CARRERA = "Carrera...";
+    private static final String PH_EDAD = "Ingresa tu edad...";
+    private static final String PH_NOMBRE = "Nombre...";
+    private static final String PH_APELLIDO = "Apellido...";
+    private static final String PH_HOBBIES = "Ingresa Tus Hobbies (Separalos por comas)...";
+    private static final String PH_INTERESES = "Ingresa Tus Intereses...";
+
     private void addPlaceholder(JTextField campo, String texto) {
         campo.setText(texto);
         campo.setForeground(Color.GRAY);
@@ -73,15 +83,15 @@ public class CrearUsuarioDao extends javax.swing.JFrame {
         this.hobbieService = new HobbieService();
         this.estudianteHobbieService = new EstudianteHobbieService();
 
-        addPlaceholder(TextNombre, "Nombre...");
-        addPlaceholder(TextApellido, "Apellido...");
-        addPlaceholder(TextCorreo, "Correo...");
-        addPlaceholder(TextContrasena, "Contraseña...");
-        addPlaceholder(TextConfirmar, "Confirma La Contraseña...");
-        addPlaceholder(TextCarrera, "Carrera...");
-        addPlaceholder(TextEdad, "Ingresa tu edad...");
-        addPlaceholder(TextHobbies, "Ingresa Tus Hobbies (Separalos por comas)...");
-        addPlaceholder(TextIntereses, "Ingresa Tus Intereses...");
+        addPlaceholder(TextNombre, PH_NOMBRE);
+        addPlaceholder(TextApellido, PH_APELLIDO);
+        addPlaceholder(TextCorreo, PH_CORREO);
+        addPlaceholder(TextContrasena, PH_CONTRASENA);
+        addPlaceholder(TextConfirmar, PH_CONFIRMAR);
+        addPlaceholder(TextCarrera, PH_CARRERA);
+        addPlaceholder(TextEdad, PH_EDAD);
+        addPlaceholder(TextHobbies, PH_HOBBIES);
+        addPlaceholder(TextIntereses, PH_INTERESES);
 
     }
 
@@ -284,11 +294,27 @@ public class CrearUsuarioDao extends javax.swing.JFrame {
             String contrasena = TextContrasena.getText().trim();
             String confirmar = TextConfirmar.getText().trim();
             String carreraStr = TextCarrera.getText().trim().toUpperCase().replace(" ", "_");
-            String hobbiesStr = TextHobbies.getText().trim(); // Solo Hobbies
-            String interesesStr = TextIntereses.getText().trim(); // Intereses (para descripción)
 
-            if (!contrasena.equals(confirmar)) {
-                JOptionPane.showMessageDialog(this, "Las contraseñas no coinciden.", "Error de Contraseña", JOptionPane.ERROR_MESSAGE);
+            String hobbiesStr = TextHobbies.getText().trim();
+            String interesesStr = TextIntereses.getText().trim();
+
+            if (!contrasena.equals(confirmar) || contrasena.equals(PH_CONTRASENA)) {
+                JOptionPane.showMessageDialog(this, "Las contraseñas no coinciden o están vacías.", "Error de Contraseña", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            if (nombre.isEmpty() || nombre.equals(PH_NOMBRE) || apellido.isEmpty() || apellido.equals(PH_APELLIDO)) {
+                JOptionPane.showMessageDialog(this, "Nombre y Apellido son obligatorios.", "Error de Validación", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            if (correoStr.isEmpty() || correoStr.equals(PH_CORREO)) {
+                JOptionPane.showMessageDialog(this, "Correo es obligatorio.", "Error de Validación", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            if (carreraStr.isEmpty() || carreraStr.equals(PH_CARRERA.toUpperCase().replace(" ", "_"))) {
+                JOptionPane.showMessageDialog(this, "Carrera es obligatoria.", "Error de Validación", JOptionPane.ERROR_MESSAGE);
                 return;
             }
 
@@ -297,7 +323,7 @@ public class CrearUsuarioDao extends javax.swing.JFrame {
             String edadStr = TextEdad.getText().trim();
 
             try {
-                if (edadStr.isEmpty() || edadStr.equalsIgnoreCase("Edad...")) {
+                if (edadStr.isEmpty() || edadStr.equals(PH_EDAD)) {
                     throw new NumberFormatException();
                 }
                 edad = Integer.parseInt(edadStr);
@@ -319,7 +345,7 @@ public class CrearUsuarioDao extends javax.swing.JFrame {
             genero = genero.trim();
 
             Carrera carrera = Carrera.valueOf(carreraStr);
-            String descripcion = interesesStr.equalsIgnoreCase("Ingresa Tus Intereses (Para la descripción)...") ? "" : interesesStr;
+            String descripcion = interesesStr.equals(PH_INTERESES) ? "" : interesesStr;
 
             Estudiante nuevoEstudiante = new Estudiante();
             nuevoEstudiante.setNombre(nombre + " " + apellido);
@@ -328,7 +354,7 @@ public class CrearUsuarioDao extends javax.swing.JFrame {
             nuevoEstudiante.setEdad(edad);
             nuevoEstudiante.setGenero(genero);
             nuevoEstudiante.setFotoUsuarioUrl(fotoPath);
-            nuevoEstudiante.setDescripcion(descripcion); 
+            nuevoEstudiante.setDescripcion(descripcion);
 
             estudianteService.crearEstudiante(nuevoEstudiante);
 
@@ -337,30 +363,32 @@ public class CrearUsuarioDao extends javax.swing.JFrame {
             nuevoCorreo.setEstudiante(nuevoEstudiante);
             correoService.crearCorreo(nuevoCorreo);
 
-            String[] hobbiesArray = hobbiesStr.split(",");
-            for (String hobbieNombreCompleto : hobbiesArray) {
-                String hobbieNombre = hobbieNombreCompleto.trim();
+            if (!hobbiesStr.isEmpty() && !hobbiesStr.equals(PH_HOBBIES)) {
+                String[] hobbiesArray = hobbiesStr.split(",");
+                for (String hobbieNombreCompleto : hobbiesArray) {
+                    String hobbieNombre = hobbieNombreCompleto.trim();
 
-                if (hobbieNombre.isEmpty() || hobbieNombre.equalsIgnoreCase("Ingresa Tus Hobbies (Separados por coma)...")) {
-                    continue;
-                }
+                    if (hobbieNombre.isEmpty()) {
+                        continue;
+                    }
 
-                List<Hobbie> hobbiesEncontrados = hobbieService.buscarPorNombre(hobbieNombre);
-                Hobbie hobbie;
+                    List<Hobbie> hobbiesEncontrados = hobbieService.buscarPorNombre(hobbieNombre);
+                    Hobbie hobbie;
 
-                if (hobbiesEncontrados.isEmpty()) {
-                    hobbie = new Hobbie();
-                    hobbie.setNombre(hobbieNombre);
-                    hobbieService.crearHobbie(hobbie);
-                } else {
-                    hobbie = hobbiesEncontrados.get(0);
-                }
+                    if (hobbiesEncontrados.isEmpty()) {
+                        hobbie = new Hobbie();
+                        hobbie.setNombre(hobbieNombre);
+                        hobbieService.crearHobbie(hobbie);
+                    } else {
+                        hobbie = hobbiesEncontrados.get(0);
+                    }
 
-                if (!estudianteHobbieService.existeRelacion(nuevoEstudiante, hobbie)) {
-                    EstudianteHobbie eh = new EstudianteHobbie();
-                    eh.setEstudiante(nuevoEstudiante);
-                    eh.setHobbie(hobbie);
-                    estudianteHobbieService.crearEstudianteHobbie(eh);
+                    if (!estudianteHobbieService.existeRelacion(nuevoEstudiante, hobbie)) {
+                        EstudianteHobbie eh = new EstudianteHobbie();
+                        eh.setEstudiante(nuevoEstudiante);
+                        eh.setHobbie(hobbie);
+                        estudianteHobbieService.crearEstudianteHobbie(eh);
+                    }
                 }
             }
 

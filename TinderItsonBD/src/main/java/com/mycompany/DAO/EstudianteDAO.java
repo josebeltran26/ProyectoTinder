@@ -163,6 +163,12 @@ public class EstudianteDAO implements IEstudianteDAO {
                     + "WHERE e.id != :estudianteId "
                     + "AND e.id NOT IN ("
                     + "SELECT l.receptor.id FROM Like l WHERE l.emisor.id = :estudianteId"
+                    + ") "
+                    + "AND e.id NOT IN ("
+                    + "  SELECT m.estudiante1.id FROM Match m WHERE m.estudiante2.id = :estudianteId"
+                    + ") "
+                    + "AND e.id NOT IN ("
+                    + "  SELECT m.estudiante2.id FROM Match m WHERE m.estudiante1.id = :estudianteId"
                     + ")", Estudiante.class);
             query.setParameter("estudianteId", estudianteId);
             query.setMaxResults(limit);

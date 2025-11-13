@@ -40,6 +40,7 @@ Pantallas\IniciarSesionDao$1.class
 com\mycompany\Service\HobbieService.class
 Pantallas\CrearUsuarioDao$5.class
 com\mycompany\Sockets\ServidorChat.class
+Pantallas\ListaLikesDao$1.class
 com\mycompany\Service\IMensajeService.class
 Pantallas\CrearUsuarioDao$10.class
 com\mycompany\Service\EstudianteService.class

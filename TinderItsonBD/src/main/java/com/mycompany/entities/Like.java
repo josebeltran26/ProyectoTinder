@@ -12,10 +12,8 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
 import java.io.Serializable;
-import java.util.Calendar;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 /**
@@ -30,9 +28,8 @@ public class Like implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "fecha_hora", nullable = false)
-    private Calendar fechaHora;
+    private LocalDateTime fechaHora; 
 
     @ManyToOne
     @JoinColumn(name = "emisor_id", nullable = false)
@@ -43,7 +40,7 @@ public class Like implements Serializable {
     private Estudiante receptor;
 
     public Like() {
-        this.fechaHora = Calendar.getInstance();
+        this.fechaHora = LocalDateTime.now(); 
     }
 
     public Long getId() {
@@ -70,11 +67,11 @@ public class Like implements Serializable {
         this.receptor = receptor;
     }
 
-    public Calendar getFechaHora() {
+    public LocalDateTime getFechaHora() { 
         return fechaHora;
     }
 
-    public void setFechaHora(Calendar fechaHora) {
+    public void setFechaHora(LocalDateTime fechaHora) { 
         this.fechaHora = fechaHora;
     }
 

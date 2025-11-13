@@ -71,12 +71,7 @@ public class PerfilesDao extends javax.swing.JFrame {
             lblFoto.setText("");
             btnLike.setEnabled(false);
             btnSkip.setEnabled(false);
-            if (btnMensaje != null) {
-                btnMensaje.setEnabled(false);
-            }
-            if (btnQuitar != null) {
-                btnQuitar.setEnabled(false);
-            }
+            
             return;
         }
 
@@ -120,17 +115,19 @@ public class PerfilesDao extends javax.swing.JFrame {
         btnLike.setEnabled(!likeDado);
         btnSkip.setEnabled(true);
 
-        if (btnQuitar != null) {
-            btnQuitar.setEnabled(likeDado);
-        }
-        if (btnMensaje != null) {
-            btnMensaje.setEnabled(existeMatch);
-        }
+        
     }
 
     private void siguientePerfil() {
         indice++;
         if (indice >= perfilesDisponibles.size()) {
+            cargarPerfiles();
+        }
+        mostrarPerfil();
+    }
+        private void AtrasPerfil() {
+        indice--;
+        if (indice <=0) {
             cargarPerfiles();
         }
         mostrarPerfil();
@@ -201,7 +198,8 @@ public class PerfilesDao extends javax.swing.JFrame {
             }
         });
 
-        btnQuitar.setText("✖️");
+        btnQuitar.setFont(new java.awt.Font("Segoe UI Black", 1, 14)); // NOI18N
+        btnQuitar.setText("<-");
         btnQuitar.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
         btnQuitar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -216,35 +214,39 @@ public class PerfilesDao extends javax.swing.JFrame {
         jPanel1Layout.setHorizontalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(202, 202, 202)
+                        .addComponent(btnMensaje, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGap(60, 60, 60)
+                        .addComponent(btnQuitar, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnLike, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 90, Short.MAX_VALUE)
+                .addComponent(btnSkip, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(63, 63, 63))
+            .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(34, 34, 34)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(207, 207, 207)
-                        .addComponent(lblFoto))
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                         .addComponent(lblNombre, javax.swing.GroupLayout.DEFAULT_SIZE, 201, Short.MAX_VALUE)
                         .addComponent(lblCarrera, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                         .addComponent(lblDescripcion, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(Hobbies)))
-                .addContainerGap(229, Short.MAX_VALUE))
-            .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(59, 59, 59)
-                .addComponent(btnLike, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(82, 82, 82)
-                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(btnMensaje, javax.swing.GroupLayout.PREFERRED_SIZE, 61, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnQuitar, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnSkip, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(64, 64, 64))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(lblFoto, javax.swing.GroupLayout.PREFERRED_SIZE, 216, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(121, 121, 121))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel1Layout.createSequentialGroup()
-                .addGap(84, 84, 84)
-                .addComponent(lblFoto)
-                .addGap(90, 90, 90)
+                .addGap(62, 62, 62)
+                .addComponent(lblFoto, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lblNombre)
                 .addGap(18, 18, 18)
                 .addComponent(lblCarrera)
@@ -254,14 +256,13 @@ public class PerfilesDao extends javax.swing.JFrame {
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(lblDescripcion)
-                        .addGap(44, 44, 44)
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(btnLike, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btnSkip, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 72, Short.MAX_VALUE)
-                        .addComponent(btnQuitar, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 57, Short.MAX_VALUE)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(btnLike, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnQuitar, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(btnSkip, javax.swing.GroupLayout.PREFERRED_SIZE, 39, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18)
                         .addComponent(btnMensaje, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(38, 38, 38))))
@@ -296,9 +297,9 @@ public class PerfilesDao extends javax.swing.JFrame {
             likeService.crearLike(nuevoLike);
 
             if (matchService.existeMatch(estudianteLogueado, perfilVisto)) {
-                JOptionPane.showMessageDialog(this, "¡MATCH! Puedes chatear desde la lista de Likes.", "¡Felicidades!", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, "match Puedes chatear desde la lista de Likes.", "¡Felicidades!", JOptionPane.INFORMATION_MESSAGE);
             } else {
-                JOptionPane.showMessageDialog(this, "¡Like dado! Espera un Match.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(this, "like Espera un Match.","", JOptionPane.INFORMATION_MESSAGE);
             }
 
             new ListaLikesDao().setVisible(true);
@@ -335,24 +336,7 @@ public class PerfilesDao extends javax.swing.JFrame {
     }//GEN-LAST:event_btnMensajeActionPerformed
 
     private void btnQuitarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnQuitarActionPerformed
-        if (perfilesDisponibles == null || indice >= perfilesDisponibles.size()) {
-            return;
-        }
-        Estudiante perfilVisto = perfilesDisponibles.get(indice);
-
-        try {
-            Like likeDado = likeService.buscarLikeDado(estudianteLogueado, perfilVisto);
-
-            if (likeDado != null) {
-                likeService.eliminarLikeDado(estudianteLogueado, perfilVisto);
-                JOptionPane.showMessageDialog(this, "Se ha quitado el Like a " + perfilVisto.getNombre() + ". El Match ha sido eliminado.", "Like Eliminado", JOptionPane.WARNING_MESSAGE);
-                siguientePerfil();
-            } else {
-                siguientePerfil();
-            }
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(this, "Error al procesar la acción: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
-        }
+       AtrasPerfil();
     }//GEN-LAST:event_btnQuitarActionPerformed
 
     /**

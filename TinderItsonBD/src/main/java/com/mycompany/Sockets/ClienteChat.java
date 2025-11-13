@@ -17,7 +17,7 @@ import javax.swing.SwingUtilities;
  */
 public class ClienteChat {
 
-    private static final String SERVER_IP = "192.168.100.4";
+    private static final String SERVER_IP = "127.0.0.1";
     private static final int SERVER_PORT = 9090;
 
     private Socket socket;
@@ -54,7 +54,7 @@ public class ClienteChat {
                 socket.close();
             }
         } catch (IOException e) {
-            }
+        }
     }
 
     private void escucharMensajes(BufferedReader in) {
